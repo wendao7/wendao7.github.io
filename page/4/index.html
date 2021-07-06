@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class="active"
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class="active"
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="home-content-container fade-in-down-animation">
+    <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/14/Redis-07-%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E3%80%81%E5%87%BB%E7%A9%BF%E3%80%81%E7%A9%BF%E9%80%8F/">
+                        Redis-07-缓存雪崩、击穿、穿透
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 缓存雪崩
+表现：缓存过期时间过于集中，瞬间大面积失效。导致所有请求短时间内全部打到DB，击垮数据库。
+
+解决：
+
+批量存数据时，每个key的失效时间加上一个随机值，这样可以保证数据不会在同一时间大面积失效
+设置热点数据永不过期，定期更新缓存
+
+2...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Wed Apr 14 2021 19:47:55 GMT+0800">2021-04-14</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/14/Redis-07-%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E3%80%81%E5%87%BB%E7%A9%BF%E3%80%81%E7%A9%BF%E9%80%8F/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/13/Redis-06-%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/">
+                        Redis-06-延时队列
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 背景
+长时间没有支付的订单，如何关闭
+如何定期检查处于退款状态的订单是否已经退款成功
+基于某起始时间，需要延迟一定时间执行的逻辑
+
+2 解决方案
+定时扫表：基于定义的时间间隔定时扫表，浪费资源。数据量较大的时候，可能造成任务执行延迟
+改造专业消息...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Tue Apr 13 2021 19:47:29 GMT+0800">2021-04-13</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/13/Redis-06-%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/12/Redis-05-%E5%BC%82%E6%AD%A5%E9%98%9F%E5%88%97/">
+                        Redis-05-异步队列
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 异步队列1.1 基本实现基于list，Redis轻量级消息队列实现
+
+rpush生产消息，lpop消费消息
+当lpop没有消息的时候，要适当sleep一会儿重试
+如果不sleep，就会不断重试，导致QPS升高，影响性能
+
+
+
+1.2 解决消息的处...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Mon Apr 12 2021 00:20:49 GMT+0800">2021-04-12</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/12/Redis-05-%E5%BC%82%E6%AD%A5%E9%98%9F%E5%88%97/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/11/Redis-04-keys%E6%8C%87%E4%BB%A4/">
+                        Redis-04-keys指令
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 KEYS
+keys pattern
+作用：扫出指定模式的key列表
+
+缺点：Redis是单线程的，keys指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕
+2 SCAN
+
+
+SCAN cursor [MATCH pattern] [C...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Sun Apr 11 2021 23:55:03 GMT+0800">2021-04-11</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/11/Redis-04-keys%E6%8C%87%E4%BB%A4/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/08/Redis-03-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+                        Redis-03-分布式锁
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 分布式锁概览控制分布式系统之间互斥访问共享资源的一种方式。
+1.1 分布式锁的特点
+互斥性： 同一时刻只能有一个线程持有锁
+可重入性： 同一节点上的同一个线程如果获取了锁之后能够再次获取锁
+锁超时：支持锁超时，防止死锁
+高性能和高可用： 加锁和解...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Thu Apr 08 2021 22:47:24 GMT+0800">2021-04-08</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/08/Redis-03-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/08/Redis-02-%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+                        Redis-02-高级数据结构
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 HyperLogLogRedis HyperLogLog 是用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的空间总是固定的、并且是很小的在 Redis 里面，每个 HyperLogLog...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Thu Apr 08 2021 15:59:15 GMT+0800">2021-04-08</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/08/Redis-02-%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/07/Redis-01-%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+                        Redis-01-基础数据结构
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 string(字符串)字符串 string 是 Redis 最简单的数据结构。Redis 所有的数据结构都是以唯一的 key 字符串作为名称，然后通过这个唯一 key 值来获取相应的 value 数据。不同类型的数据结构的差异就在于 value ...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Wed Apr 07 2021 11:37:35 GMT+0800">2021-04-07</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/07/Redis-01-%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/06/MySQL-13-%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/">
+                        MySQL-13-其他问题
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 三个范式
+第一范式：数据库表中的字段都是单一属性，不可再分
+第二范式：所有非关键字段完全依赖于任一组候选关键字
+第三范式：不存在如下依赖关系：关键字段 → 非关键字段 x → 非关键字段y
+
+2 百万级别数据如何删除
+先删除索引
+再删除其中无用数...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Tue Apr 06 2021 01:10:40 GMT+0800">2021-04-06</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/06/MySQL-13-%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/06/MySQL-12-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">
+                        MySQL-12-主从复制
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 复制的基本原理
+slave会从master读取binlog来进行数据同步
+三个步骤
+master将改变记录到二进制日志（binary log）。这些记录过程叫做二进制日志事件，binary log events；
+salve 将 master 的...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Tue Apr 06 2021 01:03:04 GMT+0800">2021-04-06</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/06/MySQL-12-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/04/05/MySQL-11-%E5%88%86%E5%8C%BA-%E5%88%86%E8%A1%A8-%E5%88%86%E5%BA%93/">
+                        MySQL-11-分区/分表/分库
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        1 分区将数据分散到多组存储文件，保证其单个文件的执行效率
+1.1 作用
+逻辑数据分割
+提高单一读、写应用速度
+分割数据能够有多个不同的物理文件路径
+高效保存历史数据
+
+1.2 查看是否支持
+SHOW VARIABLES LIKE &#39;%par...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-edit"></i> <span class="home-article-date" data-date="Mon Apr 05 2021 13:34:18 GMT+0800">2021-04-05</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/04/05/MySQL-11-%E5%88%86%E5%8C%BA-%E5%88%86%E8%A1%A8-%E5%88%86%E5%BA%93/">Read more <i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+    </ul>
+
+    <div class="home-paginator">
+        <div class="paginator">
+    
+        <a class="prev btn"
+           href="/page/3/"
+        >Prev</a>
+    
+
+    
+        <a class="next btn"
+           href="/page/5/"
+        >Next</a>
+    
+</div>
+
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+</body>
+</html>

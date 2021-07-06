@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Redis-12-Cluster |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Redis-12-Cluster</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-22 10:58:38
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Redis/">Redis</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Cluster/">Cluster</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-为什么需要Cluster"><a href="#1-为什么需要Cluster" class="headerlink" title="1 为什么需要Cluster"></a>1 为什么需要Cluster</h3><p>Redis RDB 持久化机制导致的，Redis 会 Fork 子进程完成 RDB 持久化操作，fork 执行的耗时与 Redis 数据量成正相关</p>
+<p>而 Fork 执行的时候会阻塞主线程，由于数据量过大导致阻塞主线程过长，所以出现了 Redis 响应慢的表象。</p>
+<p>使用 Redis Cluster 集群，主要解决了大数据量存储导致的各种慢问题，同时也便于横向拓展。</p>
+<ul>
+<li>垂直扩展：<ul>
+<li>内容：升级单个Redis的硬件配置</li>
+<li>优点：部署简单</li>
+<li>缺点：当数据量大且使用RDB实现持久化，会造成阻塞导致响应慢；扩展成本高</li>
+</ul>
+</li>
+<li>水平扩展：<ul>
+<li>内容：横向增加Redis实例个数，每个节点负责一部分数据</li>
+<li>优点：不需要担心单个实例的硬件和成本限制</li>
+<li>缺点：多实例分布式管理问题：如何将数据合理分布到不同实例，同时还要让客户端能正确访问到实例上的数据</li>
+</ul>
+</li>
+</ul>
+<img src="/images/Redis/redis_12_水平扩展与垂直扩展.png" width="80%" height="80%">
+
+<h3 id="2-什么是Cluster集群"><a href="#2-什么是Cluster集群" class="headerlink" title="2 什么是Cluster集群"></a>2 什么是Cluster集群</h3><p>Redis集群是一种分布式数据库方案，集群通过分片来进行数据管理，并提供复制和故障转移功能。将数据划分为16384的slots，每个节点负责一部分槽位，每个节点负责的数据多少可能不一样；槽位的信息存储在每个节点中。</p>
+<img src="/images//Redis/redis_12_集群架构.png" width="80%" height="80%">
+三个节点相互连接组成一个对等的集群，它们之间通过 Gossip协议相互交互集群信息，最后每个节点都保存着其他节点的 slots 分配情况。
+
+<h3 id="3-Cluster实现原理"><a href="#3-Cluster实现原理" class="headerlink" title="3 Cluster实现原理"></a>3 Cluster实现原理</h3><p>Redis Cluster方案采用哈希槽来处理数据和实例之间的映射关系</p>
+<h4 id="3-1-将数据分成多份存在不同实例上"><a href="#3-1-将数据分成多份存在不同实例上" class="headerlink" title="3.1 将数据分成多份存在不同实例上"></a>3.1 将数据分成多份存在不同实例上</h4><p>集群的整个数据库被分为16384个槽，数据库中的每个键都属于16384个槽的其中一个，集群中的每个节点可以处理0个或最多16384个槽。</p>
+<ul>
+<li>基于键值，使用CRC16算法，计算一个16bit的值</li>
+<li>将16bit的值对16384取模，得到的数表示key对应的哈希槽</li>
+<li>允许强制某个key挂在特定槽位上，嵌入tag标记</li>
+</ul>
+<h4 id="3-2-哈希槽与Redis实例映射"><a href="#3-2-哈希槽与Redis实例映射" class="headerlink" title="3.2 哈希槽与Redis实例映射"></a>3.2 哈希槽与Redis实例映射</h4><ul>
+<li>均分：Redis 会自动将 16384 个 哈希槽平均分布在集群实例上，比如 N 个节点，每个节点上的哈希槽数 = 16384 / N 个</li>
+<li>指定：cluster addslots 命令，指定每个实例上的哈希槽个数</li>
+</ul>
+<img src="/images//Redis/redis_12_数据_slot_实例关系.png" width="80%" height="80%">
+
+<p>当 16384 个槽都分配完全，Redis 集群才能正常工作</p>
+<h4 id="3-3-复制与故障转移"><a href="#3-3-复制与故障转移" class="headerlink" title="3.3 复制与故障转移"></a>3.3 复制与故障转移</h4><p>master用于处理槽，slave节点同步主节点数据。master下线，slave代替主节点继续处理请求。主从节点之间没有读写分离，slave只用作master宕机的高可用备份。</p>
+<p>如果某个主节点没有从节点，那么当它发生故障时，集群将完全处于不可用状态</p>
+<h4 id="3-4-故障检测"><a href="#3-4-故障检测" class="headerlink" title="3.4 故障检测"></a>3.4 故障检测</h4><p>Redis 集群节点采用 Gossip 协议来广播自己的状态以及自己对整个集群认知的改变。比如一个节点发现某个节点失联了 (PFail)，它会将这条信息向整个集群广播，其它节点也就可以收到这点失联信息</p>
+<p>如果一个节点收到了某个节点失联的数量 (PFail Count) 已经达到了集群的大多数，就可以标记该节点为确定下线状态 (Fail)，然后向整个集群广播，强迫其它节点也接收该节点已经下线的事实，并立即对该失联节点进行主从切换</p>
+<h4 id="3-5-故障转移"><a href="#3-5-故障转移" class="headerlink" title="3.5 故障转移"></a>3.5 故障转移</h4><ul>
+<li>从已下线的master和slave列表选择一个新主节点</li>
+<li>新主节点指派slots给自己</li>
+<li>广播PONG消息</li>
+<li>接收处理槽有关的命令请求，故障转移完成</li>
+</ul>
+<h4 id="3-6-选主流程"><a href="#3-6-选主流程" class="headerlink" title="3.6 选主流程"></a>3.6 选主流程</h4><img src="/images//Redis/redis_12_选主流程.png" width="80%" height="80%">
+
+<h4 id="3-7-用表保存键值对和实例的关联关系可行么"><a href="#3-7-用表保存键值对和实例的关联关系可行么" class="headerlink" title="3.7 用表保存键值对和实例的关联关系可行么"></a>3.7 用表保存键值对和实例的关联关系可行么</h4><ul>
+<li>键值对和实例关系改变需要修改表，如果是单线程操作，串行操作，性能差；多线程加锁；</li>
+<li>如果键值对数据量非常大，需要的存储空间也会很大</li>
+</ul>
+<h3 id="4-客户端如何定位数据所在实例"><a href="#4-客户端如何定位数据所在实例" class="headerlink" title="4 客户端如何定位数据所在实例"></a>4 客户端如何定位数据所在实例</h3><p>Redis 实例会将自己的哈希槽信息通过 Gossip 协议发送给集群中其他的实例，实现了哈希槽分配信息的扩散。</p>
+<p>这样，集群中的每个实例都有所有哈希槽与实例之间的映射关系信息。<br><img src="/images/Redis/redis_12_客户端确认数据所在实例.png" width="80%" height="80%"></p>
+<h4 id="4-1-重新分配哈希槽"><a href="#4-1-重新分配哈希槽" class="headerlink" title="4.1 重新分配哈希槽"></a>4.1 重新分配哈希槽</h4><p>客户端将请求发送到实例上，这个实例没有相应的数据，该 Redis 实例会告诉客户端将请求发送到其他的实例上。</p>
+<ul>
+<li>MOVED错误<ul>
+<li>MOVED 错误（负载均衡，数据已经迁移到其他实例上）</li>
+<li>同时，客户端还会更新本地缓存，将该 slot 与 Redis 实例对应关系更新正确</li>
+</ul>
+</li>
+<li>ASK 错误<ul>
+<li>如果请求的 key 在当前节点找到就直接执行命令，否则时候就需要 ASK 错误响应了</li>
+<li>ASK 错误指令并不会更新客户端缓存的哈希槽分配信息</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-集群规模"><a href="#5-集群规模" class="headerlink" title="5 集群规模"></a>5 集群规模</h3><p>Redis 官方给的 Redis Cluster 的规模上线是 1000 个实例</p>
+<p>关键在于实例间的通信开销，Cluster 集群中的每个实例都保存所有哈希槽与实例对应关系信息（Slot 映射到节点的表），以及自身的状态信息。</p>
+<p>通信频率是限制集群大小的主要原因，主要可以通过修改 cluster-node-timeout调整频率</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h3><ul>
+<li>哨兵集群实现故障自动转移，但是当数据量过大导致生成 RDB 时间过长。而 Fork 执行的时候会阻塞主线程，由于数据量过大导致阻塞主线程过长，所以出现了 Redis 响应慢的表象。</li>
+<li>使用 Redis Cluster 集群，主要解决了大数据量存储导致的各种慢问题，同时也便于横向拓展。在面向百万、千万级别的用户规模时，横向扩展的 Redis 切片集群会是一个非常好的选择。</li>
+<li>集群的整个数据库被分为 16384 个槽（slot），数据库中的每个键都属于这 16384 个槽的其中一个，集群中的每个节点可以处理 0 个或最多 16384 个槽。</li>
+<li>Redis 集群节点采用 Gossip 协议来广播自己的状态以及自己对整个集群认知的改变。</li>
+<li>客户端连接到集群候任何一个实例后，实例会将哈希槽与实例映射信息发送给客户端，客户端将信息保存，用于将 key 定位到对应的节点。</li>
+<li>集群并不能无限增加，由于集群通过 Gossip协议传播集群实例信息，所以通信频率是限制集群大小的主要原因，主要可以通过修改 cluster-node-timeout调整频率。</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/25/Kafka-01-%E6%A6%82%E8%A7%88/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kafka-01-概览</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/21/Redis-11-sentinel%E5%93%A8%E5%85%B5%E9%9B%86%E7%BE%A4%E5%8E%9F%E7%90%86/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-11-sentinel哨兵集群原理</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81Cluster"><span class="nav-text">1 为什么需要Cluster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AFCluster%E9%9B%86%E7%BE%A4"><span class="nav-text">2 什么是Cluster集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Cluster%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-text">3 Cluster实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E5%B0%86%E6%95%B0%E6%8D%AE%E5%88%86%E6%88%90%E5%A4%9A%E4%BB%BD%E5%AD%98%E5%9C%A8%E4%B8%8D%E5%90%8C%E5%AE%9E%E4%BE%8B%E4%B8%8A"><span class="nav-text">3.1 将数据分成多份存在不同实例上</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-%E5%93%88%E5%B8%8C%E6%A7%BD%E4%B8%8ERedis%E5%AE%9E%E4%BE%8B%E6%98%A0%E5%B0%84"><span class="nav-text">3.2 哈希槽与Redis实例映射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-%E5%A4%8D%E5%88%B6%E4%B8%8E%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-text">3.3 复制与故障转移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B"><span class="nav-text">3.4 故障检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB"><span class="nav-text">3.5 故障转移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-6-%E9%80%89%E4%B8%BB%E6%B5%81%E7%A8%8B"><span class="nav-text">3.6 选主流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-%E7%94%A8%E8%A1%A8%E4%BF%9D%E5%AD%98%E9%94%AE%E5%80%BC%E5%AF%B9%E5%92%8C%E5%AE%9E%E4%BE%8B%E7%9A%84%E5%85%B3%E8%81%94%E5%85%B3%E7%B3%BB%E5%8F%AF%E8%A1%8C%E4%B9%88"><span class="nav-text">3.7 用表保存键值对和实例的关联关系可行么</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E6%95%B0%E6%8D%AE%E6%89%80%E5%9C%A8%E5%AE%9E%E4%BE%8B"><span class="nav-text">4 客户端如何定位数据所在实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E9%87%8D%E6%96%B0%E5%88%86%E9%85%8D%E5%93%88%E5%B8%8C%E6%A7%BD"><span class="nav-text">4.1 重新分配哈希槽</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%9B%86%E7%BE%A4%E8%A7%84%E6%A8%A1"><span class="nav-text">5 集群规模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%80%BB%E7%BB%93"><span class="nav-text">6 总结</span></a></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

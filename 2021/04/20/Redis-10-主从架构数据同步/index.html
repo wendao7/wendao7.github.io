@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Redis-10-主从架构数据同步 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Redis-10-主从架构数据同步</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-20 14:10:13
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Redis/">Redis</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E4%B8%BB%E4%BB%8E/">主从</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-主从复制概述"><a href="#1-主从复制概述" class="headerlink" title="1 主从复制概述"></a>1 主从复制概述</h3><p>通过主从复制，将数据冗余一份复制到其他Redis服务器。前者称为主节点，后者称为从节点；数据只能从主节点复制到从节点。</p>
+<p>一个主节点可以有多个从节点，一个从节点只能有一个主节点。</p>
+<h4 id="1-1-如何保证一致性：读写分离"><a href="#1-1-如何保证一致性：读写分离" class="headerlink" title="1.1 如何保证一致性：读写分离"></a>1.1 如何保证一致性：读写分离</h4><ul>
+<li>读操作：主、从库都可以执行</li>
+<li>写操作：主库先执行，之后将写操作同步到从库</li>
+</ul>
+<img src="/images/Redis/redis_10_读写分离.png" width="80%" height="80%">
+
+<h4 id="1-2-主从复制的其他作用"><a href="#1-2-主从复制的其他作用" class="headerlink" title="1.2 主从复制的其他作用"></a>1.2 主从复制的其他作用</h4><ul>
+<li>故障恢复：当主节点宕机，其他节点依然可以提供服务；</li>
+<li>负载均衡：Master 节点提供写服务，Slave 节点提供读服务，分担压力；</li>
+<li>高可用基石：是哨兵和 cluster 实施的基础，是高可用的基石。</li>
+</ul>
+<h3 id="2-搭建主从复制的3种方式"><a href="#2-搭建主从复制的3种方式" class="headerlink" title="2 搭建主从复制的3种方式"></a>2 搭建主从复制的3种方式</h3><p>在从节点开启主从复制</p>
+<ul>
+<li>配置文件：在从服务器的配置文件中加入 replicaof <masterip> <masterport></li>
+<li>启动命令：redis-server 启动命令后面加入 –replicaof <masterip> <masterport></li>
+<li>客户端命令：直接通过客户端执行命令：replicaof <masterip> <masterport></li>
+</ul>
+<h3 id="3-主从复制原理"><a href="#3-主从复制原理" class="headerlink" title="3 主从复制原理"></a>3 主从复制原理</h3><p>主从模式后，所有数据的写操作只会在主库上进行，主库有了最新数据后，会同步给从库。</p>
+<h4 id="3-1-主从库第一次全量复制"><a href="#3-1-主从库第一次全量复制" class="headerlink" title="3.1 主从库第一次全量复制"></a>3.1 主从库第一次全量复制</h4><img src="/images/Redis/redis_10_全量同步.png" width="90%" height="90%">
+
+<ul>
+<li>建立连接<ul>
+<li>从库执行replicaof并发送psync命令告诉主库即将进行同步，主库确认后，同步开始</li>
+<li>从库基于masterhost/masterport获悉主库的地址</li>
+<li>主库根据runID和复制进度offset启动复制<ul>
+<li>runID：每个redis实例启动后，会生成一个唯一标志ID</li>
+<li>offset：复制进度偏移量，第一次设置为-1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>主库同步数据到从库<ul>
+<li>发送RDB文件到从库，从库接收后，清空当前数据库数据，再加载RDB文件数据到内存</li>
+<li>为每一个slave开辟一块replication buffer 缓冲区记录从生成 RDB 文件开始收到的所有写命令</li>
+</ul>
+</li>
+<li>发送同步期间新写命令到从库阶段<ul>
+<li><p>从节点加载RDB完成后，将replication buffer 缓冲区的数据发送到从节点，Slave 接收并执行，从节点同步至主节点相同的状态</p>
+<h4 id="3-2-replication-buffer保存的命令范围"><a href="#3-2-replication-buffer保存的命令范围" class="headerlink" title="3.2 replication buffer保存的命令范围"></a>3.2 replication buffer保存的命令范围</h4></li>
+</ul>
+</li>
+<li>master执行bgsave产生RDB的期间的写操作</li>
+<li>master发送rdb到slave网络传输期间的写操作</li>
+<li>slave load rdb文件恢复数据到内存期间的写操作</li>
+</ul>
+<h4 id="3-3-replication-buffer太小会引发的问题"><a href="#3-3-replication-buffer太小会引发的问题" class="headerlink" title="3.3 replication buffer太小会引发的问题"></a>3.3 replication buffer太小会引发的问题</h4><ul>
+<li>通过<code>client-output-buffer-limit slave</code>设置</li>
+<li>值太小导致主从复制断开<ul>
+<li><p>复制连接断开，master会释放连接相关的数据。buffer中的数据丢失，主从之间重新开始复制过程</p>
+</li>
+<li><p>主从上出现重新执行bgsave和rdb重传操作无效循环</p>
+<h4 id="3-4-主从复制为何不使用AOF"><a href="#3-4-主从复制为何不使用AOF" class="headerlink" title="3.4 主从复制为何不使用AOF"></a>3.4 主从复制为何不使用AOF</h4></li>
+</ul>
+</li>
+<li>RDB文件是二进制文件，网络传输RDB和写入磁盘的IO效率比AOF高</li>
+<li>从库进行数据恢复时，RDB效率高于AOF</li>
+</ul>
+<h4 id="3-5-增量复制"><a href="#3-5-增量复制" class="headerlink" title="3.5 增量复制"></a>3.5 增量复制</h4><p>网络断开后，主从库会采用增量复制的方式继续同步，即只将中断期间主节点执行的写命令发送给从节点</p>
+<img src="/images/Redis/redis_10_增量复制.png" width="80%" height="80%">
+
+<p>不管什么时候，master都会讲写指令记录在repl_backlog_buffer中</p>
+<ul>
+<li>master使用master_repl_offset记录自己写到的位置偏移量</li>
+<li>slave则使用slave_repl_offset记录已经读取到的偏移量</li>
+<li>正常情况下，这两个偏移量基本相等；网络断连阶段，master_repl_offset大于slave_repl_offset</li>
+</ul>
+<h4 id="3-6-repl-backlog-buffer的大小"><a href="#3-6-repl-backlog-buffer的大小" class="headerlink" title="3.6 repl_backlog_buffer的大小"></a>3.6 repl_backlog_buffer的大小</h4><p>太小会导致从库还没有读取到就被master的新写操作覆盖了，<code>repl_backlog_buffer = second * write_size_per_second</code></p>
+<h4 id="3-7-基于长连接的命令传播"><a href="#3-7-基于长连接的命令传播" class="headerlink" title="3.7 基于长连接的命令传播"></a>3.7 基于长连接的命令传播</h4><p>当主从库完成全量复制，它们之间会一直维护一个网络连接，主库会通过这个连接将后续陆续收到的命令操作再同步给从库。</p>
+<p>命令传播期间，除了发送命令，主从还维持心跳机制</p>
+<ul>
+<li>PING：主-&gt;从<ul>
+<li>让从节点进行超时判断</li>
+</ul>
+</li>
+<li>REPLCONF ACK：从-&gt;主<ul>
+<li><p>检测主从服务器的网络连接状态</p>
+</li>
+<li><p>辅助实现min-slaves</p>
+</li>
+<li><p>检测命令丢失</p>
+<h4 id="3-8-全量同步还是部分同步"><a href="#3-8-全量同步还是部分同步" class="headerlink" title="3.8 全量同步还是部分同步"></a>3.8 全量同步还是部分同步</h4><img src="/images/Redis/redis_10_增量与全量复制判断.png" width="80%" height="80%">
+
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-9-replication-buffer-和-repl-backlog-buffer"><a href="#3-9-replication-buffer-和-repl-backlog-buffer" class="headerlink" title="3.9 replication buffer 和 repl_backlog_buffer"></a>3.9 replication buffer 和 repl_backlog_buffer</h4><img src="/images/Redis/redis_10_ repl_backlog与repl_buffer区别.png" width="80%" height="80%">
+
+<ul>
+<li>replication buffer：主从库在进行全量复制时，主库上用于和从库连接的客户端的 buffer；每个从库一个</li>
+<li>repl_backlog_buffer：为了支持从库增量复制，主库上用于持续保存写操作的一块专用 buffer；所有从库共享</li>
+</ul>
+<h3 id="4-主从应用问题"><a href="#4-主从应用问题" class="headerlink" title="4 主从应用问题"></a>4 主从应用问题</h3><h4 id="4-1-读写分离"><a href="#4-1-读写分离" class="headerlink" title="4.1 读写分离"></a>4.1 读写分离</h4><p>从节点不会主动删除数据</p>
+<ul>
+<li>惰性删除</li>
+<li>定期删除</li>
+</ul>
+<p>从节点是否会读取到过期的数据：Redis3.2开始，通过从节点读取数据时，先判断数据是否过期。过期则不返还客户端，且删除数据。</p>
+<h4 id="4-2-单机内存大小限制"><a href="#4-2-单机内存大小限制" class="headerlink" title="4.2 单机内存大小限制"></a>4.2 单机内存大小限制</h4><ul>
+<li>单机内存达10GB，一个从节点的同步时间在几分钟级别。如果这段时间读负载很高，从节点无法提供服务，对系统造成很大压力</li>
+<li>如果数据量过大，全量复制阶段主节点fork+保存RDB文件耗时过大，从节点长时间接收不到数据，可能陷入 全量复制-&gt;超时中断-&gt;重连的循环</li>
+</ul>
+<h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5 总结"></a>5 总结</h3><ul>
+<li>主从复制的作用：AOF 和 RDB 二进制文件保证了宕机快速恢复数据，尽可能的防止丢失数据。但是宕机后依然无法提供服务，所以便演化出主从架构、读写分离。</li>
+<li>主从复制原理：连接建立阶段、数据同步阶段、命令传播阶段；数据同步阶段又分为 全量复制和部分复制；命令传播阶段主从节点之间有 PING 和 REPLCONF ACK 命令互相进行心跳检测。</li>
+<li>主从复制虽然解决或缓解了数据冗余、故障恢复、读负载均衡等问题，但其缺陷仍很明显：故障恢复无法自动化；写操作无法负载均衡；存储能力受到单机的限制；</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/21/Redis-11-sentinel%E5%93%A8%E5%85%B5%E9%9B%86%E7%BE%A4%E5%8E%9F%E7%90%86/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-11-sentinel哨兵集群原理</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/20/Redis-09-%E6%97%A5%E5%BF%97-%E5%AE%95%E6%9C%BA%E5%BF%AB%E9%80%9F%E6%81%A2%E5%A4%8D/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-09-日志_宕机快速恢复</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E6%A6%82%E8%BF%B0"><span class="nav-text">1 主从复制概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9A%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-text">1.1 如何保证一致性：读写分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%85%B6%E4%BB%96%E4%BD%9C%E7%94%A8"><span class="nav-text">1.2 主从复制的其他作用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%90%AD%E5%BB%BA%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%843%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-text">2 搭建主从复制的3种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86"><span class="nav-text">3 主从复制原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E4%B8%BB%E4%BB%8E%E5%BA%93%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6"><span class="nav-text">3.1 主从库第一次全量复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-replication-buffer%E4%BF%9D%E5%AD%98%E7%9A%84%E5%91%BD%E4%BB%A4%E8%8C%83%E5%9B%B4"><span class="nav-text">3.2 replication buffer保存的命令范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-replication-buffer%E5%A4%AA%E5%B0%8F%E4%BC%9A%E5%BC%95%E5%8F%91%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">3.3 replication buffer太小会引发的问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%B8%BA%E4%BD%95%E4%B8%8D%E4%BD%BF%E7%94%A8AOF"><span class="nav-text">3.4 主从复制为何不使用AOF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-%E5%A2%9E%E9%87%8F%E5%A4%8D%E5%88%B6"><span class="nav-text">3.5 增量复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-6-repl-backlog-buffer%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-text">3.6 repl_backlog_buffer的大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-%E5%9F%BA%E4%BA%8E%E9%95%BF%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%91%BD%E4%BB%A4%E4%BC%A0%E6%92%AD"><span class="nav-text">3.7 基于长连接的命令传播</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-8-%E5%85%A8%E9%87%8F%E5%90%8C%E6%AD%A5%E8%BF%98%E6%98%AF%E9%83%A8%E5%88%86%E5%90%8C%E6%AD%A5"><span class="nav-text">3.8 全量同步还是部分同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-9-replication-buffer-%E5%92%8C-repl-backlog-buffer"><span class="nav-text">3.9 replication buffer 和 repl_backlog_buffer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%BB%E4%BB%8E%E5%BA%94%E7%94%A8%E9%97%AE%E9%A2%98"><span class="nav-text">4 主从应用问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="nav-text">4.1 读写分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E5%8D%95%E6%9C%BA%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F%E9%99%90%E5%88%B6"><span class="nav-text">4.2 单机内存大小限制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-text">5 总结</span></a></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Redis-00-为什么这么快 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Redis-00-为什么这么快</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-19 14:31:46
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Redis/">Redis</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E6%80%A7%E8%83%BD%E5%9B%A0%E7%B4%A0/">性能因素</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-基于内存实现"><a href="#1-基于内存实现" class="headerlink" title="1 基于内存实现"></a>1 基于内存实现</h3><p>Redis将数据存储在内存中，读写操作不会因为磁盘IO速度限制。</p>
+<ul>
+<li>内存操作：ns级别</li>
+<li>磁盘操作：ms级别</li>
+</ul>
+<img src="/images/Redis/00_存储介质IO耗时对比.png" width="80%" height="80%">
+
+<h3 id="2-高效的数据结构"><a href="#2-高效的数据结构" class="headerlink" title="2 高效的数据结构"></a>2 高效的数据结构</h3><h4 id="2-1-常见数据类似及应用"><a href="#2-1-常见数据类似及应用" class="headerlink" title="2.1 常见数据类似及应用"></a>2.1 常见数据类似及应用</h4><ul>
+<li>String：缓存、计数器、分布式锁</li>
+<li>List：链表、队列、关注人时间轴列表</li>
+<li>Hash：用户信息、hash表</li>
+<li>Set：去重、赞、踩、共同好友</li>
+<li>Zset：访问量排行榜、点击量排行榜</li>
+</ul>
+<h4 id="2-2-Redis数据类型与底层数据结构对应关系"><a href="#2-2-Redis数据类型与底层数据结构对应关系" class="headerlink" title="2.2 Redis数据类型与底层数据结构对应关系"></a>2.2 Redis数据类型与底层数据结构对应关系</h4><img src="/images/Redis/00_Redis数据类型与底层数据结构对应关系.png" width="80%" height="80%">
+
+<blockquote>
+<p>(1) Redis hash字典</p>
+</blockquote>
+<img src="/images/Redis/00_Redis全局哈希表.png" width="80%" height="80%">
+Redis整体就是一个哈希表来保存所有键值对。哈希表本质就是一个数组，每个元素叫做哈希桶，每个桶里面的entry保存着实际具体值的指针。
+
+<p>整个数据库就是一个全局哈希表，哈希表的时间复杂度是<code>O(1)</code>，只需要计算每个键的哈希值，就知道对应哈希桶位置，定位桶里面entry找到对应数据。</p>
+<p>Redis通过链式哈希解决冲突：同一个桶里面的元素使用链表保存。</p>
+<p>随着操作的不断执行， 哈希表保存的键值对会逐渐地增多或者减少， 为了让哈希表的负载因子（load factor）【哈希表已保存的节点数/哈希表的大小】维持在一个合理的范围之内，需要rehash。</p>
+<ul>
+<li>给hash表2分配更大的空间</li>
+<li>将hash表1的数据渐进式地迁移到hash表2</li>
+<li>释放hash表1的空间</li>
+</ul>
+<p>渐进式 rehash，每次处理客户端请求的时候，先从 hash 表 1 中第一个索引开始，将这个位置的 所有数据拷贝到 hash 表 2 中，就这样将 rehash 分散到多次请求过程中，避免耗时阻塞</p>
+<blockquote>
+<p>SDS 简单动态字符</p>
+</blockquote>
+<img src="/images/Redis/SDS动态字符串.png" width="80%" height="80%">
+
+<p>区别</p>
+<ul>
+<li>获取字符串长度<ul>
+<li>C语言获取字符串长度信息，需要遍历整个字符串，时间复杂度<code>O(n)</code>，遍历到<code>\0</code>时结束</li>
+<li>SDS中len变量保存，时间复杂度为<code>O(1)</code></li>
+</ul>
+</li>
+<li>空间预分配<ul>
+<li>SDS被修改后，不仅分配SDS所需要的空间，还会分配额外的未使用空间；小于1M，分配和len相同长度的未使用空间，大于1M，分配1M的未使用空间。</li>
+</ul>
+</li>
+<li>惰性空间释放<ul>
+<li>对SDS缩短时，不会回收多余的内存空间，使用free记录字节数量，后续append操作时，直接使用free中未使用的空间，减少内存分配</li>
+</ul>
+</li>
+<li>二进制安全<ul>
+<li><p>Redis不仅可以存储String类型的数据，也可能存储一些二进制数据</p>
+<blockquote>
+<p>zipList压缩列表</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<img src="/images/Redis/00_Ziplist.png" width="80%" height="80%">
+当一个列表只有少量数据，且每个列表项要么就是小整数值，要么就是短字符串，就会使用压缩列表来做列表键的底层实现。
+
+<p>查找定位第一个元素和最后一个元素，<code>O(1)</code>；其他元素只能遍历。</p>
+<blockquote>
+<p>双端列表</p>
+</blockquote>
+<p>Redis链表实现特性</p>
+<ul>
+<li>双端：每个节点带有prev和next指针</li>
+<li>无环：表头节点prev和表尾节点的next指针都指向NULL</li>
+<li>带表头指针和表尾指针：head、tail</li>
+<li>带链表长度计数器：len</li>
+<li>多态：链表可以用于保存各种不同类型的值</li>
+</ul>
+<img src="/images/Redis/00_quicklist.png" width="80%" height="80%">
+quicklist 是 ziplist 和 linkedlist 的混合体，它将 linkedlist 按段切分，每一段使用 ziplist 来紧凑存储，多个 ziplist 之间使用双向指针串接起来
+
+<blockquote>
+<p>skipList 跳跃表</p>
+</blockquote>
+<img src="/images/Redis/00_skiplist.png" width="80%" height="80%">
+
+<ul>
+<li>有序数据结构，通过在每个节点维持多个指向其他节点的指针，从而达到快速访问节点的目的</li>
+<li>平均<code>O(logN)</code>，最坏<code>O(N)</code>复杂度的节点查找，还可以通过顺序性操作来批量处理节点</li>
+<li>多层级索引，通过索引位置的几个调整，实现数据快速定位</li>
+</ul>
+<blockquote>
+<p>整数集合(intset)</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct intset&#123;</span><br><span class="line">     //编码方式</span><br><span class="line">     uint32_t encoding;</span><br><span class="line">     //集合包含的元素数量</span><br><span class="line">     uint32_t length;</span><br><span class="line">     //保存元素的数组</span><br><span class="line">     int8_t contents[];</span><br><span class="line">&#125;intset;</span><br></pre></td></tr></table></figure>
+<p>当一个集合只包含整数值元素，且这个集合的元素数量不多，Redis 就会使用整数集合作为集合键的底层实现。各个项在数组中按值的大小从小到大有序地排列，并且数组中不包含任何重复项。</p>
+<h3 id="3-合理的数据编码"><a href="#3-合理的数据编码" class="headerlink" title="3 合理的数据编码"></a>3 合理的数据编码</h3><p>Redis使用对象来表示数据库中的键值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct redisObject&#123;</span><br><span class="line">    //类型</span><br><span class="line">   unsigned type:4;</span><br><span class="line">   //编码</span><br><span class="line">   unsigned encoding:4;</span><br><span class="line">   //指向底层数据结构的指针</span><br><span class="line">   void *ptr;</span><br><span class="line">    //...</span><br><span class="line"> &#125;robj;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>String<ul>
+<li>存储数字，int编码</li>
+<li>非数字，才用raw编码</li>
+</ul>
+</li>
+<li>List<ul>
+<li>字符串长度&lt;64字节且元素个数&lt;512，则ziplist</li>
+<li>否则linkedlist</li>
+</ul>
+</li>
+<li>Hash<ul>
+<li>ziplist<ul>
+<li>Hash 对象保存的所有键值对的键和值的字符串长度均小于 64 字节</li>
+<li>Hash 对象保存的键值对数量小于 512 个</li>
+</ul>
+</li>
+<li>否则hashtable</li>
+</ul>
+</li>
+<li>Set<ul>
+<li>保存元素为整数且元素个数小于一定范围使用 intset 编码</li>
+<li>否则hashtable</li>
+</ul>
+</li>
+<li>Zset<ul>
+<li>Ziplist 压缩列表第一个节点存储元素的成员，第二个节点存储元素的分值，并且按分值大小从小到大有序排列。<ul>
+<li>Zset 保存的元素个数小于 128</li>
+<li>Zset 元素的成员长度都小于 64 字节</li>
+</ul>
+</li>
+<li>否则skiplist</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-单线程模型"><a href="#4-单线程模型" class="headerlink" title="4 单线程模型"></a>4 单线程模型</h3><p>Redis 的单线程指的是 Redis 的网络 IO 以及键值对指令读写是由一个线程来执行的。对于 Redis 的持久化、集群数据同步、异步删除等都是其他线程执行。</p>
+<h4 id="4-1-多线程的弊端"><a href="#4-1-多线程的弊端" class="headerlink" title="4.1 多线程的弊端"></a>4.1 多线程的弊端</h4><p>使用多线程，通常可以增加系统吞吐量，充分利用CPU资源。运行任务之前，系统需要帮助预先设置CPU寄存器和程序计数器(CPU上下文)。</p>
+<p>切换上下文时，需要完成一系列非常消耗资源的操作。此外，面临共享资源的并发访问控制问题。</p>
+<h4 id="4-2-单线程的好处"><a href="#4-2-单线程的好处" class="headerlink" title="4.2 单线程的好处"></a>4.2 单线程的好处</h4><ul>
+<li>不会因为线程创建导致的性能开销</li>
+<li>避免上下文切换引起的CPU</li>
+<li>避免线程之间的竞争问题</li>
+<li>代码更清晰，处理逻辑简单</li>
+</ul>
+<h4 id="4-3-单线程是否没有充分利用CPU资源"><a href="#4-3-单线程是否没有充分利用CPU资源" class="headerlink" title="4.3 单线程是否没有充分利用CPU资源"></a>4.3 单线程是否没有充分利用CPU资源</h4><p>Redis 是基于内存的操作，CPU 不是 Redis 的瓶颈，Redis 的瓶颈最有可能是机器内存的大小或者网络带宽</p>
+<h3 id="5-I-O-多路复用模型"><a href="#5-I-O-多路复用模型" class="headerlink" title="5 I/O 多路复用模型"></a>5 I/O 多路复用模型</h3><p>Redis 采用 I/O 多路复用技术，并发处理连接。采用了 epoll + 自己实现的简单的事件框架。epoll 中的读、写、关闭、连接都转化成了事件，然后利用 epoll 的多路复用特性，绝不在 IO 上浪费一点时间。</p>
+<h4 id="5-1-基本IO模型"><a href="#5-1-基本IO模型" class="headerlink" title="5.1 基本IO模型"></a>5.1 基本IO模型</h4><img src="/images/基本get请求.png" width="80%" height="80%">
+
+<ul>
+<li>和客户端建立建立 accept;</li>
+<li>从 socket 种读取请求 recv;</li>
+<li>解析客户端发送的请求 parse;</li>
+<li>执行 get 指令；</li>
+<li>响应客户端数据，也就是 向 socket 写回数据<br>使用传统阻塞 IO ，也就是在执行 read、accept 、recv 等网络操作会一直阻塞等待。</li>
+</ul>
+<h4 id="5-2-IO多路复用"><a href="#5-2-IO多路复用" class="headerlink" title="5.2 IO多路复用"></a>5.2 IO多路复用</h4><img src="/images/高性能IO多路复用.png" width="80%" height="80%">
+多路：多个socket连接，复用：复用一个线程；基本原理：内核不是监视应用程序本身的连接，而是监视应用程序的文件描述符。
+
+<p>当客户端运行时，它将生成具有不同事件类型的套接字。在服务器端，I / O 多路复用程序（I / O 多路复用模块）会将消息放入队列（也就是 下图的 I/O 多路复用程序的 socket 队列），然后通过文件事件分派器将其转发到不同的事件处理器</p>
+<p>Redis 单线程情况下，内核会一直监听 socket 上的连接请求或者数据请求，一旦有请求到达就交给 Redis 线程处理，这就实现了一个 Redis 线程处理多个 IO 流的效果。</p>
+<p>select/epoll 提供了基于事件的回调机制，即针对不同事件的发生，调用相应的事件处理器。</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h3><ul>
+<li>纯内存操作，一般都是简单的存取操作，线程占用的时间很多，时间的花费主要集中在 IO 上，所以读取速度快。</li>
+<li>整个 Redis 就是一个全局 哈希表，他的时间复杂度是 O(1)，而且为了防止哈希冲突导致链表过长，Redis 会执行 rehash 操作，扩充 哈希桶数量，减少哈希冲突。并且防止一次性 重新映射数据过大导致线程阻塞，采用 渐进式 rehash。巧妙的将一次性拷贝分摊到多次请求过程后总，避免阻塞。</li>
+<li>Redis 使用的是非阻塞 IO：IO 多路复用，使用了单线程来轮询描述符，将数据库的开、关、读、写都转换成了事件，Redis 采用自己实现的事件分离器，效率比较高。</li>
+<li>采用单线程模型，保证了每个操作的原子性，也减少了线程的上下文切换和竞争。</li>
+<li>Redis 全程使用 hash 结构，读取速度快，还有一些特殊的数据结构，对数据存储进行了优化，如压缩表，对短数据进行压缩存储，再如，跳表，使用有序的数据结构加快读取的速度。</li>
+<li>根据实际存储的数据类型选择不同编码</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/19/Redis-08-%E5%8D%95%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-08-单线程与多线程</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/16/OS-01-I-O/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">OS-01-I/O</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9F%BA%E4%BA%8E%E5%86%85%E5%AD%98%E5%AE%9E%E7%8E%B0"><span class="nav-text">1 基于内存实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%AB%98%E6%95%88%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">2 高效的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E4%BC%BC%E5%8F%8A%E5%BA%94%E7%94%A8"><span class="nav-text">2.1 常见数据类似及应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB"><span class="nav-text">2.2 Redis数据类型与底层数据结构对应关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%90%88%E7%90%86%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BC%96%E7%A0%81"><span class="nav-text">3 合理的数据编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-text">4 单线程模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%BC%8A%E7%AB%AF"><span class="nav-text">4.1 多线程的弊端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E5%8D%95%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-text">4.2 单线程的好处</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%98%AF%E5%90%A6%E6%B2%A1%E6%9C%89%E5%85%85%E5%88%86%E5%88%A9%E7%94%A8CPU%E8%B5%84%E6%BA%90"><span class="nav-text">4.3 单线程是否没有充分利用CPU资源</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-I-O-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%9E%8B"><span class="nav-text">5 I&#x2F;O 多路复用模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-%E5%9F%BA%E6%9C%ACIO%E6%A8%A1%E5%9E%8B"><span class="nav-text">5.1 基本IO模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">5.2 IO多路复用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%80%BB%E7%BB%93"><span class="nav-text">6 总结</span></a></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

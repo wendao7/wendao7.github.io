@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        网络-04-IP-01-IP基础知识 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">网络-04-IP-01-IP基础知识</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-07-01 14:48:05
+    </span>
+    
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="1-IP基本认识"><a href="#1-IP基本认识" class="headerlink" title="1 IP基本认识"></a>1 IP基本认识</h2><p>IP在TCP/IP参考模型中处于第三层，即网络层。网络层的主要作用是实现主机与主机之间的通信</p>
+<blockquote>
+<p>网络层与数据链路层的关系</p>
+</blockquote>
+<img src="/images/网络/03_06_ip与数据链路层.jpg" width="80%" height="80%">
+
+<ul>
+<li>MAC的作用是实现直连的两个设备之间通信<ul>
+<li>区间内两个节点的传输，区间内出发点好比源MAC地址，目标地点好比目的MAC地址</li>
+<li>源 MAC 地址和目标 MAC 一直在变化</li>
+</ul>
+</li>
+<li>IP则负责在没有直连的两个网络之间进行通信传输<ul>
+<li>整个行程表，行程起点好比源IP，行程终点好比目的IP地址</li>
+<li>源IP地址和目标IP地址在传输过程中是不会变化的</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-IP地址的基础知识"><a href="#2-IP地址的基础知识" class="headerlink" title="2 IP地址的基础知识"></a>2 IP地址的基础知识</h2><p>在TCP/IP网络通信时，为了保证能正常通信，每个设备都需要配置正确的IP地址；IP地址以网卡来配置，IP地址(IPv4地址)由32位正整数表示</p>
+<img src="/images/网络/03_06_ipv4地址.jpg" width="80%" height="80%">
+
+<h3 id="2-1-IP地址的分类"><a href="#2-1-IP地址的分类" class="headerlink" title="2.1 IP地址的分类"></a>2.1 IP地址的分类</h3><img src="/images/网络/03_06_ip地址分类.jpg" width="80%" height="80%">
+
+<img src="/images/网络/03_06_abc类地址.jpg" width="80%" height="80%">
+
+<blockquote>
+<p>最大主机个数=2^主机位数-2</p>
+</blockquote>
+<img src="/images/网络/03_06_广播.jpg" width="80%" height="80%">
+
+<ul>
+<li>广播地址：用于在同一个链路中相互连接的主机之间发送数据包<ul>
+<li>本地广播：在本网络内广播</li>
+<li>直接广播：在不同网络之间的广播</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>D/E类地址</p>
+</blockquote>
+<img src="/images/网络/03_06_de类地址.jpg" width="80%" height="80%">
+
+<p>D类地址是多播地址，用于将包发送给特定组内的所有主机；前4位是1110表示多播地址，剩下28位是多播的组编号。<br>由于广播无法穿透路由，若想给其他网段发送同样的包，就可以使用可以穿透路由的多播</p>
+<p>IP分类的优确缺点</p>
+<ul>
+<li>优点：简单明了，选路简单</li>
+<li>缺点：<ul>
+<li>同一网络下没有地址层次</li>
+<li>不能很好与现实网络匹配</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2-无分类地址CIDR"><a href="#2-2-无分类地址CIDR" class="headerlink" title="2.2 无分类地址CIDR"></a>2.2 无分类地址CIDR</h3><p>不再有分类地址的概念，32比特的地址划分为两部分，前面是网络号，后面是主机号</p>
+<blockquote>
+<p>表现形式</p>
+</blockquote>
+<p>a.b.c.d/x，/x表示前x位属于网络号，x的范围是0-32</p>
+<img src="/images/网络/03_06_CIDR.jpg" width="80%" height="80%">
+
+<blockquote>
+<p>子网掩码</p>
+</blockquote>
+<img src="/images/网络/03_06_子网掩码.jpg" width="80%" height="80%">
+
+<blockquote>
+<p>为什么分离网络号和主机号</p>
+</blockquote>
+<img src="/images/网络/03_06_路由寻址.jpg" width="80%" height="80%">
+
+<blockquote>
+<p>子网划分：将主机地址分为两个部分：子网网络地址和子网主机地址</p>
+</blockquote>
+<img src="/images/网络/03_06_子网划分.jpg" width="80%" height="80%">
+
+<img src="/images/网络/03_06_c类子网划分.jpg" width="80%" height="80%">
+
+<img src="/images/网络/03_06_c类子网划分结果.jpg" width="80%" height="80%">
+
+<h3 id="2-3-公有IP地址与私有IP地址"><a href="#2-3-公有IP地址与私有IP地址" class="headerlink" title="2.3 公有IP地址与私有IP地址"></a>2.3 公有IP地址与私有IP地址</h3><img src="/images/网络/03_06_公有与私有IP.jpg" width="80%" height="80%">
+
+<h3 id="2-4-IP地址与路由控制"><a href="#2-4-IP地址与路由控制" class="headerlink" title="2.4 IP地址与路由控制"></a>2.4 IP地址与路由控制</h3><img src="/images/网络/03_06_ip与路由寻址.jpg" width="80%" height="80%">
+
+<ul>
+<li>IP地址中的网络地址用于路由控制</li>
+<li>路由控制表记录着网络地址和下一步应该发送至的路由器的地址</li>
+<li>发送IP数据包时，首先取出目标IP地址，再从路由控制表找到与该地址具有相同网络地址的记录</li>
+</ul>
+<h3 id="2-5-IP分片与重组"><a href="#2-5-IP分片与重组" class="headerlink" title="2.5 IP分片与重组"></a>2.5 IP分片与重组</h3><ul>
+<li>不同数据链路的使用目的不同，因此可承载的MTU也就不同；以太网的MTU是1500字节，当IP数据包大于MTU时，IP数据包就会被分片</li>
+<li>经过分片之后的IP数据报在被重组的时候，只能由目标主机进行，路由器是不会进程重组</li>
+<li>在分片传输中，一旦某个分片丢失，则会造成整个IP数据报作废，所以TCP引入了MSS，在TCP层进行分片</li>
+<li>对于UDP尽量不要发送一个大于MTU的数据报文</li>
+</ul>
+<h3 id="2-6-IPv6基本认识"><a href="#2-6-IPv6基本认识" class="headerlink" title="2.6 IPv6基本认识"></a>2.6 IPv6基本认识</h3><p>IPv6的地址是128位，由更多的地址，还有更好的安全性和扩展性</p>
+<ul>
+<li>IPv6可自动配置，即使没有DHCP服务器也可以实现自动分配IP地址</li>
+<li>IPv6包首部长度采用固定40字节，去掉包头校验和，简化首部，减轻路由器负荷，大大提高了传输性能</li>
+<li>有应对伪造IP地址的网络安全功能以及防止窃听的功能</li>
+</ul>
+<blockquote>
+<p>IPv6地址的标识方法</p>
+</blockquote>
+<img src="/images/网络/03_06_ipv6标志.jpg" width="80%" height="80%">
+
+<h3 id="2-7-IPv4首部与IPv6首部"><a href="#2-7-IPv4首部与IPv6首部" class="headerlink" title="2.7 IPv4首部与IPv6首部"></a>2.7 IPv4首部与IPv6首部</h3><img src="/images/网络/03_06_ipv46对比.jpg" width="80%" height="80%">
+
+<ul>
+<li>取消首部校验和</li>
+<li>取消分片和重组相关字段</li>
+<li>取消选项字段</li>
+</ul>
+<h2 id="3-IP协议相关技术"><a href="#3-IP协议相关技术" class="headerlink" title="3 IP协议相关技术"></a>3 IP协议相关技术</h2><h3 id="3-1-DNS"><a href="#3-1-DNS" class="headerlink" title="3.1 DNS"></a>3.1 DNS</h3><p>DNS可以将域名网址自动转换为具体的IP地址</p>
+<blockquote>
+<p>域名的层级关系：用句点分割，越靠右的位置其层级越高</p>
+</blockquote>
+<ul>
+<li>根DNS服务器</li>
+<li>顶级域DNS服务器（com）</li>
+<li>权限DNS服务器（server.com）</li>
+</ul>
+<blockquote>
+<p>域名解析的工作流程：只指路不带路</p>
+</blockquote>
+<img src="/images/网络/03_06_域名解析流程.jpg" width="80%" height="80%">
+
+<h3 id="3-2-ARP"><a href="#3-2-ARP" class="headerlink" title="3.2 ARP"></a>3.2 ARP</h3><p>传输IP数据报的时候，确定了源IP地址和目的IP地址，就会通过主机路由表确定IP数据包下一跳。网络层的下一层是数据链路层，还要知道下一跳的MAC地址。<br>ARP协议，通过IP地址，求得下一跳的MAC地址</p>
+<blockquote>
+<p>ARP如何确定MAC地址：通过ARP请求与ARP响应</p>
+</blockquote>
+<img src="/images/网络/03_06_arp协议.jpg" width="80%" height="80%">
+* 主机通过广播发送ARP请求，这个包中包含想要知道MAC地址的主机IP地址
+* 同个链路中的设备收到ARP请求时，判断ARP请求包中的目的IP地址是否与自己的一致，如果一致则将自己的MAC地址填入ARP响应包
+* 系统通常会缓存第一次通过ARP获取的MAC地址缓存起来，缓存有时间期限
+
+<blockquote>
+<p>RARP：通过MAC地址求IP</p>
+</blockquote>
+<p>打印机等小型嵌入式设备接入网络<br><img src="/images/网络/03_06_RARP协议.jpg" width="80%" height="80%"></p>
+<h3 id="3-4-DHCP：动态获取IP"><a href="#3-4-DHCP：动态获取IP" class="headerlink" title="3.4 DHCP：动态获取IP"></a>3.4 DHCP：动态获取IP</h3><ul>
+<li>客户端发起DHCP发现报文的IP数据报，客户端没有IP地址，也不知道DHCP服务器地址，所以使用的是UDP广播通信。<ul>
+<li>使用的广播目的地址是255.255.255.255:67；源地址是0.0.0.0：68</li>
+<li>DHCP 客户端将该 IP 数据报传递给链路层，链路层然后将帧广 播到所有的网络中设备。</li>
+</ul>
+</li>
+<li>DHCP 服务器收到 DHCP 发现报文时，用 DHCP 提供报文(DHCP OFFER) 向客户端做出响应<ul>
+<li>目的IP地址仍然使用广播地址255.255.255.255</li>
+<li>该报文信息携带服务器提供可租约的 IP 地址、子网掩码、默认网关、 DNS 服务器以及 IP 地址租用期</li>
+</ul>
+</li>
+<li>客户端收到一个或多个服务器的 DHCP 提供报文后，从中选择一个服务器，并向选中的服务器发送 DHCP 请 求报文(DHCP REQUEST进行响应，回显配置的参数</li>
+<li>服务端用 DHCP ACK 报文对 DHCP 请求报文进行响应，应答所要求的参数</li>
+</ul>
+<p>如果租期快到期后，客户端向服务器发送DHCP请求报文</p>
+<ul>
+<li>服务器如果同意继续租用，则用 DHCP ACK 报文进行应答，客户端就会延⻓租期</li>
+<li>服务器如果不同意继续租用，则用 DHCP NACK 报文，客户端就要停止使用租约的 IP 地址</li>
+</ul>
+<blockquote>
+<p>DHCP交互中，使用UDP广播通信</p>
+</blockquote>
+<p>路由器不会转发广播包，出现了DHCP中继代理，对不同网段的IP地址分配也可以由一个DHCP服务器同一进行管理</p>
+<ul>
+<li>DHCP 客户端会向 DHCP 中继代理发送 DHCP 请求包，而 DHCP 中继代理在收到这个广播包以后，再以单播 的形式发给 DHCP 服务器</li>
+<li>服务器端收到该包以后再向 DHCP 中继代理返回应答，并由 DHCP 中继代理将此包广播给 DHCP 客户端 </li>
+</ul>
+<h3 id="3-5-NAT"><a href="#3-5-NAT" class="headerlink" title="3.5 NAT"></a>3.5 NAT</h3><p>通过网络地址转换NAT的方法，延缓IPv4地址耗尽的问题；简单的来说 NAT 就是同个公司、家庭、教室内的主机对外部通信时，把私有 IP 地址转换成公有 IP 地址</p>
+<img src="/images/网络/03_06_NAT.jpg" width="80%" height="80%">
+
+<img src="/images/网络/03_06_NAPT.jpg" width="80%" height="80%">
+
+<ul>
+<li>缺点<ul>
+<li>外部无法主动与 NAT 内部服务器建立连接，因为 NAPT 转换表没有转换记录。</li>
+<li>转换表的生成与转换操作都会产生性能开销</li>
+<li>通信过程中，如果 NAT 路由器􏰁启了，所有的 TCP 连接都将被􏰁置</li>
+</ul>
+</li>
+<li>解决<ul>
+<li><p>IPv6</p>
+</li>
+<li><p>NAT穿透技术：客户端主动从 NAT 设备获取公有 IP 地址，然后自己建立端口映射条目，然后用这个条目对外通信， 就不需要 NAT 设备来进行转换了</p>
+<h3 id="3-6-ICMP"><a href="#3-6-ICMP" class="headerlink" title="3.6 ICMP"></a>3.6 ICMP</h3><p>ICMP 全称是 Internet Control Message Protocol，也就是互联网控制报文协议</p>
+</li>
+</ul>
+</li>
+<li>确认IP包是否成功送达目标地址</li>
+<li>报告发送过程中IP包被废弃的原因和改善网络设置等</li>
+</ul>
+<img src="/images/网络/04_01_icmp.jpg" width="80%" height="80%">
+
+<blockquote>
+<p>类型</p>
+</blockquote>
+<img src="/images/网络/04_01_icmp类型.jpg" width="80%" height="80%">
+
+<h3 id="3-7-IGMP：IGMP-是因特网组管理协议，工作在主机-组播成员-和最后一跳路由之间"><a href="#3-7-IGMP：IGMP-是因特网组管理协议，工作在主机-组播成员-和最后一跳路由之间" class="headerlink" title="3.7 IGMP：IGMP 是因特网组管理协议，工作在主机(组播成员)和最后一跳路由之间"></a>3.7 IGMP：IGMP 是因特网组管理协议，工作在主机(组播成员)和最后一跳路由之间</h3><img src="/images/网络/04_01_igmp.jpg" width="80%" height="80%">
+* IGMP 报文向路由器申请加入和退出组播组，默认情况下路由器是不会转发组播包到连接中的主机，除非主机 通过 IGMP 加入到组播组，主机申请加入到组播组时，路由器就会记录 IGMP 路由器表，路由器后续就会转发 组播包到对应的主机了
+* IGMP 报文采用 IP 封装，IP 头部的协议号为 2，而且 TTL 字段值通常为 1，因为 IGMP 是工作在主机与连接 的路由器之间
+
+<blockquote>
+<p>常规查询与响应工作机制</p>
+</blockquote>
+<img src="/images/网络/04_01_常规查询与响应机制.jpg" width="80%" height="80%">
+
+<blockquote>
+<p>离开组播组工作机制</p>
+</blockquote>
+<ul>
+<li>离开组播组，网段中仍有该组播组，继续向该网络转发组播数据包</li>
+<li>离开组播组，网段中没有该组播组，停止向该网络转发组播数据包</li>
+</ul>
+<h2 id="4-ping的工作原理：基于ICMP协议工作"><a href="#4-ping的工作原理：基于ICMP协议工作" class="headerlink" title="4 ping的工作原理：基于ICMP协议工作"></a>4 ping的工作原理：基于ICMP协议工作</h2><blockquote>
+<p>ICMP包头格式</p>
+</blockquote>
+<img src="/images/网络/04_01_igmp头格式.jpg" width="80%" height="80%">
+
+<h3 id="4-1-回送消息–类型0和8"><a href="#4-1-回送消息–类型0和8" class="headerlink" title="4.1 回送消息–类型0和8"></a>4.1 回送消息–类型0和8</h3><img src="/images/网络/04_01_回送消息.jpg" width="80%" height="80%">
+
+<h3 id="4-2-差错报文类型"><a href="#4-2-差错报文类型" class="headerlink" title="4.2 差错报文类型"></a>4.2 差错报文类型</h3><blockquote>
+<p>目标不可达–类型为3</p>
+</blockquote>
+<img src="/images/网络/04_01_igmp目标不可达.jpg" width="80%" height="80%">
+
+<ul>
+<li>网络不可达0：IP 地址是分为网络号和主机号的，所以当路由器中的路由器表匹配不到接收方 IP 的网络号，就通过 ICMP 协议以网络不可达( Network Unreachable )的原因告知主机</li>
+<li>主机不可达1：当路由表中没有该主机的信息，或者该主机没有连接到网络，那么会通过 ICMP 协议以主机不可达( Host Unreachable )的原因告知主机</li>
+<li>协议不可达2：当主机使用 TCP 协议访问对端主机时，能找到对端的主机了，可是对端主机的防火墙已经禁止 TCP 协议访问，那 么会通过 ICMP 协议以协议不可达的原因告知主机</li>
+<li>端口不可达3：当主机访问对端主机 8080 端口时，这次能找到对端主机了，防火墙也没有限制，可是发现对端主机没有进程监听8080 端口，那么会通过 ICMP 协议以端口不可达的原因告知主机</li>
+<li>需要进行分片但设置了不分片位代码为 4：发送端主机发送 IP 数据报时，将 IP 首部的分片禁止标志位设置为 1 。根据这个标志位，途中的路由器遇到超过MTU 大小的数据包时，不会进行分片，而是直接抛弃</li>
+</ul>
+<blockquote>
+<p>原点抑制消息–类型为4</p>
+</blockquote>
+<p>当路由器向低速线路发送数据时，其发送队列的缓存变为零而无法发送出去时，可以向 IP 包的源地址发送一个 ICMP 原点抑制消息</p>
+<blockquote>
+<p>定向消息(ICMP Redirect Message) —— 类型 5</p>
+</blockquote>
+<p>路由器发现发送端主机使用了「不是最优」的路径发送数据，那么它会返回一个 ICMP 重定向消息给这个主机，在这个消息中包含了最合适的路由信息和源数据</p>
+<blockquote>
+<p>超时消息(ICMP Time Exceeded Message) —— 类型 11</p>
+</blockquote>
+<p>IP 包中有一个字段叫做 TTL ( Time To Live ，生存周期)，它的值随着每经过一次路由器就会减 1，直到减到0 时该 IP 包会被丢弃,路由器将会发送一个 ICMP 超时消息给发送端主机，并通知该包已被丢弃</p>
+<h3 id="4-3-ping-查询报文类型的使用"><a href="#4-3-ping-查询报文类型的使用" class="headerlink" title="4.3 ping-查询报文类型的使用"></a>4.3 ping-查询报文类型的使用</h3><img src="/images/网络/04_01_ping过程.jpg" width="80%" height="80%">
+
+<h3 id="4-4-traceroute-差错报文类型的使用"><a href="#4-4-traceroute-差错报文类型的使用" class="headerlink" title="4.4 traceroute-差错报文类型的使用"></a>4.4 traceroute-差错报文类型的使用</h3><blockquote>
+<p>故意设置特殊的TTL，来追踪去往目的地时沿途经过的路由器</p>
+</blockquote>
+<blockquote>
+<p>故意不设置分片，从而确定路径的MTU</p>
+</blockquote>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/07/03/%E7%BD%91%E7%BB%9C-05-%E7%BB%BC%E5%90%88/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">网络-05-综合</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/06/29/%E7%BD%91%E7%BB%9C-03-TCP-05-TCP%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">网络-03-TCP-05-TCP内核参数</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-IP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%86"><span class="nav-text">1 IP基本认识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-text">2 IP地址的基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-text">2.1 IP地址的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%97%A0%E5%88%86%E7%B1%BB%E5%9C%B0%E5%9D%80CIDR"><span class="nav-text">2.2 无分类地址CIDR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%85%AC%E6%9C%89IP%E5%9C%B0%E5%9D%80%E4%B8%8E%E7%A7%81%E6%9C%89IP%E5%9C%B0%E5%9D%80"><span class="nav-text">2.3 公有IP地址与私有IP地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-IP%E5%9C%B0%E5%9D%80%E4%B8%8E%E8%B7%AF%E7%94%B1%E6%8E%A7%E5%88%B6"><span class="nav-text">2.4 IP地址与路由控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-IP%E5%88%86%E7%89%87%E4%B8%8E%E9%87%8D%E7%BB%84"><span class="nav-text">2.5 IP分片与重组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-IPv6%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%86"><span class="nav-text">2.6 IPv6基本认识</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-IPv4%E9%A6%96%E9%83%A8%E4%B8%8EIPv6%E9%A6%96%E9%83%A8"><span class="nav-text">2.7 IPv4首部与IPv6首部</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-IP%E5%8D%8F%E8%AE%AE%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF"><span class="nav-text">3 IP协议相关技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-DNS"><span class="nav-text">3.1 DNS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-ARP"><span class="nav-text">3.2 ARP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-DHCP%EF%BC%9A%E5%8A%A8%E6%80%81%E8%8E%B7%E5%8F%96IP"><span class="nav-text">3.4 DHCP：动态获取IP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-NAT"><span class="nav-text">3.5 NAT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-ICMP"><span class="nav-text">3.6 ICMP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-IGMP%EF%BC%9AIGMP-%E6%98%AF%E5%9B%A0%E7%89%B9%E7%BD%91%E7%BB%84%E7%AE%A1%E7%90%86%E5%8D%8F%E8%AE%AE%EF%BC%8C%E5%B7%A5%E4%BD%9C%E5%9C%A8%E4%B8%BB%E6%9C%BA-%E7%BB%84%E6%92%AD%E6%88%90%E5%91%98-%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E8%B7%B3%E8%B7%AF%E7%94%B1%E4%B9%8B%E9%97%B4"><span class="nav-text">3.7 IGMP：IGMP 是因特网组管理协议，工作在主机(组播成员)和最后一跳路由之间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-ping%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%EF%BC%9A%E5%9F%BA%E4%BA%8EICMP%E5%8D%8F%E8%AE%AE%E5%B7%A5%E4%BD%9C"><span class="nav-text">4 ping的工作原理：基于ICMP协议工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%9B%9E%E9%80%81%E6%B6%88%E6%81%AF%E2%80%93%E7%B1%BB%E5%9E%8B0%E5%92%8C8"><span class="nav-text">4.1 回送消息–类型0和8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%B7%AE%E9%94%99%E6%8A%A5%E6%96%87%E7%B1%BB%E5%9E%8B"><span class="nav-text">4.2 差错报文类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-ping-%E6%9F%A5%E8%AF%A2%E6%8A%A5%E6%96%87%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">4.3 ping-查询报文类型的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-traceroute-%E5%B7%AE%E9%94%99%E6%8A%A5%E6%96%87%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">4.4 traceroute-差错报文类型的使用</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

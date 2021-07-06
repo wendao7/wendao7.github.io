@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Redis-11-sentinel哨兵集群原理 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Redis-11-sentinel哨兵集群原理</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-21 22:16:41
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Redis/">Redis</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%93%A8%E5%85%B5%E9%9B%86%E7%BE%A4/">哨兵集群</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-概要"><a href="#1-概要" class="headerlink" title="1 概要"></a>1 概要</h3><p>主从复制架构面临一个严峻问题，主库挂了，无法执行写操作，无法自动选择一个slave切换为master，无法故障自动切换</p>
+<h3 id="2-什么是哨兵"><a href="#2-什么是哨兵" class="headerlink" title="2 什么是哨兵"></a>2 什么是哨兵</h3><p>主节点宕机，从从节点选举新主节点的机制。<br><img src="/images/Redis/redis_11_哨兵集群.png" width="80%" height="80%"></p>
+<h3 id="3-哨兵机制的主要任务"><a href="#3-哨兵机制的主要任务" class="headerlink" title="3 哨兵机制的主要任务"></a>3 哨兵机制的主要任务</h3><img src="/images/Redis/redis_11_哨兵执行任务与目标.png" width="80%" height="80%">
+
+<ul>
+<li>监控：持续监控master、slave是否处于预期工作状态</li>
+<li>自动切换主库：当master运行故障，哨兵启动自动故障恢复流程，从slave中选择一台作为新master</li>
+<li>通知：让slave执行replicaof，与新的master同步；通知客户端与新master建立连接</li>
+</ul>
+<h4 id="3-1-监控"><a href="#3-1-监控" class="headerlink" title="3.1 监控"></a>3.1 监控</h4><p>sentinel向master、slave、其他sentinel发送PING命令，如果没有在规定时间内响应哨兵的PING命令，则判定为下线</p>
+<p>PING命令的回复</p>
+<ul>
+<li>有效回复：+PONG/-LOADING/-MASTERDOWN</li>
+<li>无效回复：有效回复之外的回复</li>
+</ul>
+<h4 id="3-2-主观下线"><a href="#3-2-主观下线" class="headerlink" title="3.2 主观下线"></a>3.2 主观下线</h4><ul>
+<li>如果是无效回复，直接标记为主观下线；如果检测的是slave，则直接标记为主观下线</li>
+<li>如果检测的是master，则多个哨兵实例一起判断，降低误判概率</li>
+</ul>
+<h4 id="3-3-客观下线"><a href="#3-3-客观下线" class="headerlink" title="3.3 客观下线"></a>3.3 客观下线</h4><img src="/images/Redis/redis_11_客观下线.png" width="80%" height="80%">
+
+<p>一定数量的哨兵判断master已经主观下线，这时候才能将master标记为客观下线</p>
+<p>只有 master 被判定为「客观下线」，才会进一步触发哨兵开始主从切换流程</p>
+<p><code>一定数量</code>是一个法定数量，是由哨兵监控配置决定的；过半机制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># sentinel monitor &lt;master-name&gt; &lt;master-host&gt; &lt;master-port&gt; &lt;quorum&gt;</span><br><span class="line"># 举例如下：</span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-自动切换主库"><a href="#3-4-自动切换主库" class="headerlink" title="3.4 自动切换主库"></a>3.4 自动切换主库</h4><img src="/images/Redis/redis_11_新master选举.png" width="80%" height="80%">
+
+<ul>
+<li>筛选条件<ul>
+<li>从库当前在线状态</li>
+<li>评估之前的网络连接状态：down-after-milliseconds * 10</li>
+</ul>
+</li>
+<li>打分<ul>
+<li>slave优先级：slave-priority 配置项</li>
+<li>slave_repl_offset与 master_repl_offset复制进度差距</li>
+<li>slave runID，在优先级和复制进度都相同的情况下，ID 号最小的从库得分最高</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-5-通知"><a href="#3-5-通知" class="headerlink" title="3.5 通知"></a>3.5 通知</h4><ul>
+<li>通知其他slave执行replacaof命令，复制数据</li>
+<li>通知客户端与master连接</li>
+</ul>
+<h3 id="4-哨兵集群工作原理"><a href="#4-哨兵集群工作原理" class="headerlink" title="4 哨兵集群工作原理"></a>4 哨兵集群工作原理</h3><h4 id="4-1-pub-sub实现哨兵间通信和发现slave"><a href="#4-1-pub-sub实现哨兵间通信和发现slave" class="headerlink" title="4.1 pub/sub实现哨兵间通信和发现slave"></a>4.1 pub/sub实现哨兵间通信和发现slave</h4><p>master有一个_ <em>sentinel</em> _:hello的专用通道，用于哨兵之间发布和订阅消息。</p>
+<p>这就好比是 <strong>sentinel</strong>:hello 微信群，哨兵利用 master 建立的微信群发布自己的消息，同时关注其他哨兵发布的消息。</p>
+<img src="/images/Redis/redis_11_INFO命令获取slave信息.png" width="80%" height="80%">
+
+<p>哨兵向 master 发送 INFO 命令， master 掌门自然是知道自己门下所有的 salve 小弟的。所以 master 接收到命令后，便将 slave 列表告诉哨兵。</p>
+<p>哨兵根据 master 响应的 slave 名单信息与每一个 salve 建立连接，并且根据这个连接持续监控哨兵</p>
+<h4 id="4-2-选择哨兵执行主从切换"><a href="#4-2-选择哨兵执行主从切换" class="headerlink" title="4.2 选择哨兵执行主从切换"></a>4.2 选择哨兵执行主从切换</h4><p>获得多数赞成票的哨兵可以向其他哨兵发送命令，申明自己想要执行主从切换</p>
+<ul>
+<li>获得其他哨兵基友过半的赞成票</li>
+<li>赞成票的数量还要大于等于配置文件的 quorum 的值</li>
+</ul>
+<h4 id="4-3-通过-pub-sub-实现客户端事件通知"><a href="#4-3-通过-pub-sub-实现客户端事件通知" class="headerlink" title="4.3 通过 pub/sub 实现客户端事件通知"></a>4.3 通过 pub/sub 实现客户端事件通知</h4><p>客户端可以订阅哨兵的消息，哨兵提供的消息订阅频道有很多，不同频道包含了主从库切换过程中的不同关键事件。</p>
+<ul>
+<li>master 下线事件<ul>
+<li>+sdown：进入“主观下线”状态；</li>
+<li>-sdown：退出“主观下线”状态；</li>
+<li>+odown：进入“客观下线”状态；</li>
+<li>-odown：退出“客观下线”状态；</li>
+</ul>
+</li>
+<li>slave 重新配置事件<ul>
+<li>+slave-reconf-sent：哨兵发送 replicaof 命令重新配置从库；</li>
+<li>+slave-reconf-inprog：slave 配置了新 master，但是尚未进行同步；</li>
+<li>+slave-reconf-done：slave 配置了新 master，并与新 master 完成了数据同步； </li>
+</ul>
+</li>
+<li>新主库切换<ul>
+<li>+switch-master：master 地址发生了变化</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-注意事项与配置说明"><a href="#5-注意事项与配置说明" class="headerlink" title="5 注意事项与配置说明"></a>5 注意事项与配置说明</h3><ul>
+<li>down-after-milliseconds<ul>
+<li>指定了 Sentinel 判断实例进入主观下线所需的时间长度</li>
+<li>要保证所有哨兵实例的配置是一致</li>
+</ul>
+</li>
+<li>down-after-milliseconds * 10<ul>
+<li><p>down-after-milliseconds 是我们认定主从库断连的最大连接超时时间</p>
+</li>
+<li><p>如果发生断连的次数超过了 10 次，就说明这个从库的网络状况不好，不适合作为新主库</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h3><h4 id="6-1-哨兵主要任务"><a href="#6-1-哨兵主要任务" class="headerlink" title="6.1 哨兵主要任务"></a>6.1 哨兵主要任务</h4><p>Redis 哨兵机制是实现 Redis 不间断服务的高可用手段之一。主从架构集群的数据同步，是数据可靠的基础保障；主库宕机，自动执行主从切换是服务不间断的关键支撑。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Redis 哨兵机制实现了主从库的自动切换</p>
+<ul>
+<li>监控 master 与 slave 运行状态，判断是否客观下线；</li>
+<li>master 客观下线后，选择一个 slave 切换成 master；</li>
+<li>通知 slave 和客户端新 master 信息；</li>
+</ul>
+<h4 id="6-2-哨兵集群原理"><a href="#6-2-哨兵集群原理" class="headerlink" title="6.2 哨兵集群原理"></a>6.2 哨兵集群原理</h4><p>为了避免单个哨兵故障后无法进行主从切换，以及为了减少误判率，又引入了哨兵集群；哨兵集群又需要有一些机制来支撑它的正常运行：</p>
+<ul>
+<li>基于 pub/sub 机制实现哨兵集群之间的通信；</li>
+<li>基于 INFO 命令获取 slave 列表，帮助 哨兵与 slave 建立连接；</li>
+<li>通过哨兵的 pub/sub，实现了与客户端和哨兵之间的事件通知。<br>主从切换，并不是随意选择一个哨兵就可以执行，而是通过投票仲裁，选择一个 Leader，由这个 Leader 负责主从切换。</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/22/Redis-12-Cluster/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-12-Cluster</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/20/Redis-10-%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-10-主从架构数据同步</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E8%A6%81"><span class="nav-text">1 概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%A8%E5%85%B5"><span class="nav-text">2 什么是哨兵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BB%BB%E5%8A%A1"><span class="nav-text">3 哨兵机制的主要任务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E7%9B%91%E6%8E%A7"><span class="nav-text">3.1 监控</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-%E4%B8%BB%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-text">3.2 主观下线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-%E5%AE%A2%E8%A7%82%E4%B8%8B%E7%BA%BF"><span class="nav-text">3.3 客观下线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E4%B8%BB%E5%BA%93"><span class="nav-text">3.4 自动切换主库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-%E9%80%9A%E7%9F%A5"><span class="nav-text">3.5 通知</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%93%A8%E5%85%B5%E9%9B%86%E7%BE%A4%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-text">4 哨兵集群工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-pub-sub%E5%AE%9E%E7%8E%B0%E5%93%A8%E5%85%B5%E9%97%B4%E9%80%9A%E4%BF%A1%E5%92%8C%E5%8F%91%E7%8E%B0slave"><span class="nav-text">4.1 pub&#x2F;sub实现哨兵间通信和发现slave</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E9%80%89%E6%8B%A9%E5%93%A8%E5%85%B5%E6%89%A7%E8%A1%8C%E4%B8%BB%E4%BB%8E%E5%88%87%E6%8D%A2"><span class="nav-text">4.2 选择哨兵执行主从切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-%E9%80%9A%E8%BF%87-pub-sub-%E5%AE%9E%E7%8E%B0%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BA%8B%E4%BB%B6%E9%80%9A%E7%9F%A5"><span class="nav-text">4.3 通过 pub&#x2F;sub 实现客户端事件通知</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="nav-text">5 注意事项与配置说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%80%BB%E7%BB%93"><span class="nav-text">6 总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-%E5%93%A8%E5%85%B5%E4%B8%BB%E8%A6%81%E4%BB%BB%E5%8A%A1"><span class="nav-text">6.1 哨兵主要任务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-%E5%93%A8%E5%85%B5%E9%9B%86%E7%BE%A4%E5%8E%9F%E7%90%86"><span class="nav-text">6.2 哨兵集群原理</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

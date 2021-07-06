@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Kafka-03-架构原理 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Kafka-03-架构原理</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-26 13:14:40
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/MQ/">MQ</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Kafka/">Kafka</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-Architecture"><a href="#1-Architecture" class="headerlink" title="1 Architecture"></a>1 Architecture</h3><ul>
+<li>Producer： 生产者，发送消息的一方。生产者负责创建消息，然后将其发送到 Kafka。</li>
+<li>Consumer： 消费者，接受消息的一方。消费者连接到 Kafka 上并接收消息，进而进行相应的业务逻辑处理。</li>
+<li>Consumer Group： 一个消费者组可以包含一个或多个消费者。<ul>
+<li>使用多分区 + 多消费者方式可以极大提高数据下游的处理速度</li>
+<li>同一消费组中的消费者不会重复消费消息</li>
+<li>不同消费组中的消费者消息消息时互不影响</li>
+<li>Kafka 就是通过消费组的方式来实现消息 P2P 模式和广播模式</li>
+</ul>
+</li>
+<li>Broker： 服务代理节点。Broker 是 Kafka 的服务节点，即 Kafka 的服务器</li>
+<li>Topic： Kafka 中的消息以 Topic 为单位进行划分，生产者将消息发送到特定的 Topic，而消费者负责订阅 Topic 的消息并进行消费。</li>
+<li>Partition： Topic 是一个逻辑的概念，它可以细分为多个分区，每个分区只属于单个主题。<ul>
+<li>同一个主题下不同分区包含的消息是不同的</li>
+<li>分区在存储层面可以看作一个可追加的日志（Log）文件，消息在被追加到分区日志文件的时候都会分配一个特定的偏移量（offset）</li>
+</ul>
+</li>
+<li>Offset： offset 是消息在分区中的唯一标识，Kafka 通过它来保证消息在分区内的顺序性，不过 offset 并不跨越分区，也就是说，Kafka 保证的是分区有序性而不是主题有序性。</li>
+<li>Replication： 副本，是 Kafka 保证数据高可用的方式<ul>
+<li>Kafka 同一 Partition 的数据可以在多 Broker 上存在多个副本</li>
+<li>通常只有主副本对外提供读写服务</li>
+<li>当主副本所在 broker 崩溃或发生网络异常，Kafka 会在 Controller 的管理下会重新选择新的 Leader 副本对外提供读写服务</li>
+</ul>
+</li>
+<li>Record： 实际写入 Kafka 中并可以被读取的消息记录。每个 record 包含了 key、value 和 timestamp</li>
+</ul>
+<h3 id="2-Zookeeper"><a href="#2-Zookeeper" class="headerlink" title="2 Zookeeper"></a>2 Zookeeper</h3><h4 id="2-1-Controller"><a href="#2-1-Controller" class="headerlink" title="2.1 Controller"></a>2.1 Controller</h4><p>Controller 是从 Broker 中选举出来的，负责分区 Leader 和 Follower 的管理。</p>
+<ul>
+<li>当某个分区的 leader 副本发生故障时，由 Controller 负责为该分区选举新的 leader 副本。</li>
+<li>当检测到某个分区的 ISR(In-Sync Replica)集合发生变化时，由控制器负责通知所有 broker 更新其元数据信息。</li>
+<li>当使用kafka-topics.sh脚本为某个 topic 增加分区数量时，同样还是由控制器负责分区的重新分配</li>
+</ul>
+<p>Kafka 中 Contorller 的选举的工作依赖于 Zookeeper，成功竞选为控制器的 broker 会在 Zookeeper 中创建/controller这个临时（EPHEMERAL）节点。</p>
+<blockquote>
+<p>选举过程</p>
+</blockquote>
+<img src="/images/Kafka/Kafka_03_选举过程.png" width="80%" height="80%">
+
+<p>只有创建成功的那个 broker 才会成为控制器，而创建失败的 broker 则表示竞选失败。每个 broker 都会在内存中保存当前控制器的 brokerid 值，这个值可以标识为 activeControllerId。</p>
+<blockquote>
+<p>实现</p>
+</blockquote>
+<img src="/images/Kafka/Kafka_03_实现.png" width="80%" height="80%">
+
+<ul>
+<li>Controller 读取 Zookeeper 中的节点数据，初始化上下文(Controller Context)<ul>
+<li>通过定时任务，或者监听器模式获取 zookeeper 信息</li>
+</ul>
+</li>
+<li>并管理节点变化，变更上下文<ul>
+<li>事件监听会更新更新上下文信息</li>
+</ul>
+</li>
+<li>同时也需要将这些变更信息同步到其他普通的 broker 节点中<ul>
+<li>Controller 内部也采用生产者-消费者实现模式，Controller 将 zookeeper 的变动通过事件的方式发送给事件队列，事件消费者线程组通过消费消费事件，将相应的事件同步到各 Broker 节点</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>职责</p>
+</blockquote>
+<ul>
+<li>处理 Broker 节点的上线和下线，Controller 需要及时更新集群元数据，并将集群变化通知到所有的 Broker 集群节点</li>
+<li>创建 Topic 或者 Topic 扩容分区，Controller 需要负责分区副本的分配工作，并主导 Topic 分区副本的 Leader 选举</li>
+<li>管理集群中所有的副本和分区的状态机，监听状态机变化事件，并作出相应的处理</li>
+</ul>
+<h4 id="2-2-分区状态机：PartitionStateChange"><a href="#2-2-分区状态机：PartitionStateChange" class="headerlink" title="2.2 分区状态机：PartitionStateChange"></a>2.2 分区状态机：PartitionStateChange</h4><ul>
+<li>NonExistentPartition：该状态表示分区没有被创建过或创建后被删除了。</li>
+<li>NewPartition：分区刚创建后，处于这个状态。此状态下分区已经分配了副本，但是还没有选举 leader，也没有 ISR 列表。</li>
+<li>OnlinePartition：一旦这个分区的 leader 被选举出来，将处于这个状态。</li>
+<li>OfflinePartition：当分区的 leader 宕机，转移到这个状态。</li>
+</ul>
+<h4 id="2-3-副本状态机：ReplicaStateChange"><a href="#2-3-副本状态机：ReplicaStateChange" class="headerlink" title="2.3 副本状态机：ReplicaStateChange"></a>2.3 副本状态机：ReplicaStateChange</h4><ul>
+<li>NewReplica: 创建 topic 和分区分配后创建 replicas，此时，replica 只能获取到成为 follower 状态变化请求。</li>
+<li>OnlineReplica: 当 replica 成为 parition 的 assingned replicas 时，其状态变为 OnlineReplica, 即一个有效的 OnlineReplica。</li>
+<li>OfflineReplica: 当一个 replica 下线，进入此状态，这一般发生在 broker 宕机的情况下；</li>
+<li>NonExistentReplica: Replica 成功删除后，replica 进入 NonExistentReplica 状态。</li>
+</ul>
+<h4 id="2-4-Network"><a href="#2-4-Network" class="headerlink" title="2.4 Network"></a>2.4 Network</h4><p>Kafka 的网络通信模型是基于 NIO 的 Reactor 多线程模型来设计的。</p>
+<p>其中包含了一个Acceptor线程，用于处理新的连接，Acceptor 有 N 个 Processor 线程 select 和 read socket 请求，N 个 Handler 线程处理请求并相应，即处理业务逻辑</p>
+<img src="/images/Kafka/Kafka_03_网络.png" width="80%" height="80%">
+
+
+
+
+
+
+
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/27/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86-02-%E8%AF%8D%E6%B3%95%E4%B8%8E%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">编译原理-02-词法与语法分析</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/26/Kafka-02-%E6%80%A7%E8%83%BD%E7%AF%87/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kafka-02-性能篇</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Architecture"><span class="nav-text">1 Architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Zookeeper"><span class="nav-text">2 Zookeeper</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Controller"><span class="nav-text">2.1 Controller</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E5%88%86%E5%8C%BA%E7%8A%B6%E6%80%81%E6%9C%BA%EF%BC%9APartitionStateChange"><span class="nav-text">2.2 分区状态机：PartitionStateChange</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E5%89%AF%E6%9C%AC%E7%8A%B6%E6%80%81%E6%9C%BA%EF%BC%9AReplicaStateChange"><span class="nav-text">2.3 副本状态机：ReplicaStateChange</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-Network"><span class="nav-text">2.4 Network</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

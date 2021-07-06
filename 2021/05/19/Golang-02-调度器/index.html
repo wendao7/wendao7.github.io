@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Golang-02-调度器 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Golang-02-调度器</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-05-19 23:13:41
+    </span>
+    
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-Golang调度器的由来"><a href="#1-Golang调度器的由来" class="headerlink" title="1 Golang调度器的由来"></a>1 Golang调度器的由来</h3><img src="/images/Golang/02_调度器模型1.png" width="80%" height="80%">
+
+<h4 id="1-1-单进程时代不需要调度器"><a href="#1-1-单进程时代不需要调度器" class="headerlink" title="1.1 单进程时代不需要调度器"></a>1.1 单进程时代不需要调度器</h4><p>一切的程序只能串行发生，缺点：</p>
+<ul>
+<li>单一执行流程，计算机只能一个任务一个任务处理</li>
+<li>进程阻塞带来的CPU时间浪费</li>
+</ul>
+<h4 id="1-2-多进程-线程时代的调度器"><a href="#1-2-多进程-线程时代的调度器" class="headerlink" title="1.2 多进程/线程时代的调度器"></a>1.2 多进程/线程时代的调度器</h4><p>多进程并发：当一个进程阻塞的时候，切换到另外等待执行的进程，这样就可以尽量使用CPU，不浪费。<br>当程序线程触发调度, 需要进行上下文切时, 首先会从用户态迁移到内核态, 之后由操作系统保存寄存器中信息、程序计数器中信息、栈信息等。这些操作会产生极大开销。另外, 再次执行时如果线程被分配到另外的核上执行, 还会涉及到重新获取缓存等问题(L1、L2级缓存与核关联)。</p>
+<p>缺点：</p>
+<ul>
+<li>大量的进程/线程导致高内存占用</li>
+<li>进程拥有太多资源，进程的创建、切换、销毁都会占用很长的时间，CPU很大一部分用于进程调度，利用率低</li>
+</ul>
+<h4 id="1-3-协程提高CPU利用率"><a href="#1-3-协程提高CPU利用率" class="headerlink" title="1.3 协程提高CPU利用率"></a>1.3 协程提高CPU利用率</h4><p>其实一个线程分为 “内核态 “线程和” 用户态 “线程。</p>
+<p>一个 “用户态线程” 必须要绑定一个 “内核态线程”，但是 CPU 并不知道有 “用户态线程” 的存在，它只知道它运行的是一个 “内核态线程”。细化分类之后，内核线程依然叫做线程，用户线程叫做协程。</p>
+<blockquote>
+<p>N:1关系</p>
+</blockquote>
+<p>N个协程绑定一个线程</p>
+<ul>
+<li>优点<ul>
+<li>协程在用户态线程即完成切换，不会陷入内核态，这种切换非常轻量快速</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li><p>无法使用多核加速能力</p>
+</li>
+<li><p>一旦协程阻塞，造成线程阻塞，本线程的其他协程都无法执行，丧失并发能力</p>
+<blockquote>
+<p>1:1关系</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<p>1个协程绑定一个线程</p>
+<ul>
+<li>优点：实现容易</li>
+<li>缺点：协程的创建、销毁和切换都由CPU完成，代价昂贵</li>
+</ul>
+<blockquote>
+<p>M:N</p>
+</blockquote>
+<ul>
+<li>缺点：实现复杂</li>
+</ul>
+<h4 id="1-4-Go语言的协程goroutine"><a href="#1-4-Go语言的协程goroutine" class="headerlink" title="1.4 Go语言的协程goroutine"></a>1.4 Go语言的协程goroutine</h4><p>Go 为了提供更容易使用的并发方法，使用了 goroutine 和 channel。</p>
+<p>goroutine 来自协程的概念，让一组可复用的函数运行在一组线程之上，即使有协程阻塞，该线程的其他协程也可以被 runtime 调度，转移到其他可运行的线程上。</p>
+<p>Go 中，协程被称为 goroutine，它非常轻量，一个 goroutine 只占几 KB，并且这几 KB 就足够 goroutine 运行完，这就能在有限的内存空间内支持大量 goroutine，支持了更多的并发。</p>
+<p>特点：</p>
+<ul>
+<li>占用内存小</li>
+<li>调度更灵活</li>
+</ul>
+<h4 id="1-5-被废弃的goroutine调度器"><a href="#1-5-被废弃的goroutine调度器" class="headerlink" title="1.5 被废弃的goroutine调度器"></a>1.5 被废弃的goroutine调度器</h4><ul>
+<li>G: goroutine协程</li>
+<li>M: thread线程</li>
+</ul>
+<img src="/images/Golang/02_废弃的调度器模型.png" width="80%" height="80%">
+
+<p>缺点</p>
+<ul>
+<li>创建、销毁、调度G都需要每个M获取锁，锁竞争激烈</li>
+<li>M转移G会造成额外的系统负载，亲和性较差</li>
+<li>Per-M的内存问题. 基于TCMalloc结构的内存结构, 每个M都需要memory cache和其他类型的cache(stack alloc), 然而实际上只有M在运行Go代码时才需要这些Per-M Cache, 阻塞在系统调用的M并不需要mcache. 正在运行Go代码的M与进行系统调用的M的比例可能高达1:100, 这造成了极大的内存消耗, 和很差的数据局部性</li>
+<li>系统调用(CPU在M之间的切换)导致频繁的线程阻塞和恢复增加系统开销</li>
+</ul>
+<h3 id="2-goroutine-调度器的-GMP-模型的设计思想"><a href="#2-goroutine-调度器的-GMP-模型的设计思想" class="headerlink" title="2 goroutine 调度器的 GMP 模型的设计思想"></a>2 goroutine 调度器的 GMP 模型的设计思想</h3><ul>
+<li>P: processor，包含了运行goroutine的资源，如果线程想运行G，必须先获取P，P中还包含了可运行的G队列<img src="/images/Golang/02_当前调度器模型.png" width="80%" height="80%">
+
+</li>
+</ul>
+<h4 id="2-1-GMP"><a href="#2-1-GMP" class="headerlink" title="2.1 GMP"></a>2.1 GMP</h4><p>在 Go 中，线程是运行 goroutine 的实体，调度器的功能是把可运行的 goroutine 分配到工作线程上。</p>
+<ul>
+<li>全局队列（Global Queue）：存放等待运行的 G。</li>
+<li>P 的本地队列：同全局队列类似，存放的也是等待运行的 G，存的数量有限，不超过 256 个。新建 G’时，G’优先加入到 P 的本地队列，如果队列满了，则会把本地队列中一半的 G 移动到全局队列。</li>
+<li>P 列表：所有的 P 都在程序启动时创建，并保存在数组中，最多有 GOMAXPROCS(可配置) 个。</li>
+<li>M：线程想运行任务就得获取 P，从 P 的本地队列获取 G，P 队列为空时，M 也会尝试从全局队列拿一批 G 放到 P 的本地队列，或从其他 P 的本地队列偷一半放到自己 P 的本地队列。M 运行 G，G 执行之后，M 会从 P 获取下一个 G，不断重复下去。</li>
+</ul>
+<p>Goroutine 调度器和 OS 调度器是通过 M 结合起来的，每个 M 都代表了 1 个内核线程，OS 调度器负责把内核线程分配到 CPU 的核上执行。</p>
+<blockquote>
+<p>有关P和M的个数问题</p>
+</blockquote>
+<ul>
+<li>P: 启动时<code>GOMAXPROCS</code>或者由<code>runtime.GOMAXPROCS()</code>设置</li>
+<li>M:<ul>
+<li>go程序启动时，设置M的最大数量10000</li>
+<li>runtime/debug 中的 SetMaxThreads 函数，设置 M 的最大数量</li>
+<li>一个 M 阻塞了，会创建新的 M </li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>P和M何时创建</p>
+</blockquote>
+<ul>
+<li>P: 在确定了 P 的最大数量 n 后，运行时系统会根据这个数量创建 n 个 P</li>
+<li>M: 没有足够的 M 来关联 P 并运行其中的可运行的 G 时</li>
+</ul>
+<h4 id="2-2-调度器的设计策略"><a href="#2-2-调度器的设计策略" class="headerlink" title="2.2 调度器的设计策略"></a>2.2 调度器的设计策略</h4><ul>
+<li>复用线程<ul>
+<li>work stealing机制：当本线程无可运行的 G 时，尝试从其他线程绑定的 P 偷取 G，而不是销毁线程</li>
+<li>hand off机制：当本线程因为 G 进行系统调用阻塞时，线程释放绑定的 P，把 P 转移给其他空闲的线程执行</li>
+</ul>
+</li>
+<li>利用并行：由<code>GOMAXPROCS</code>决定</li>
+<li>抢占：在 coroutine 中要等待一个协程主动让出 CPU 才执行下一个协程，在 Go 中，一个 goroutine 最多占用 CPU 10ms，防止其他 goroutine 被饿死<ul>
+<li>伪抢占：因为Go在函数切换的时候, 会进行栈检查等操作, 所以通过设置一个标记, 如果这个标记被标志上, 那在Go进行栈检查的时候就可以触发抢占。这个标记是通过sysmon系统监控进程进行, 当某个协程执行过长时, 就会设置这个协程栈的标志, 从而触发调度</li>
+<li>真抢占：这个信号在M上, 实现就很简单明了: 当要触发抢占的时候, 对这个信号发送, 即可触发M进行调度。</li>
+</ul>
+</li>
+<li>全局G队列：当 M 执行 work stealing 从其他 P 偷不到 G 时，它可以从全局 G 队列获取 G</li>
+</ul>
+<h4 id="2-3-go-func-调度流程"><a href="#2-3-go-func-调度流程" class="headerlink" title="2.3 go func()调度流程"></a>2.3 go func()调度流程</h4><img src="/images/Golang/02_go_func调度流程.png" width="100%" height="100%">
+
+<ul>
+<li>5、当 M 执行某一个 G 时候如果发生了 syscall 或则其余阻塞操作，M 会阻塞，如果当前有一些 G 在执行，runtime 会把这个线程 M 从 P 中摘除 (detach)，然后再创建一个新的操作系统的线程 (如果有空闲的线程可用就复用空闲线程) 来服务于这个 P；</li>
+<li>6、当 M 系统调用结束时候，这个 G 会尝试获取一个空闲的 P 执行，并放入到这个 P 的本地队列。如果获取不到 P，那么这个线程 M 变成休眠状态， 加入到空闲线程中，然后这个 G 会被放入全局队列中。</li>
+</ul>
+<h4 id="2-4-调度器的生命周期"><a href="#2-4-调度器的生命周期" class="headerlink" title="2.4 调度器的生命周期"></a>2.4 调度器的生命周期</h4><img src="/images/Golang/02_调度器的生命周期.png" width="60%" height="60%">
+
+<ul>
+<li>M0: M0 是启动程序后的编号为 0 的主线程，这个 M 对应的实例会在全局变量 runtime.m0 中，不需要在 heap 上分配，M0 负责执行初始化操作和启动第一个 G， 在之后 M0 就和其他的 M 一样了。</li>
+<li>G0: G0 是每次启动一个 M 都会第一个创建的 goroutine，G0 是仅用于负责调度的 G，G0 不指向任何可执行的函数，每个 M 都会有一个自己的 G0。在调度或系统调用时会使用 G0 的栈空间，全局变量的 G0 是 M0 的 G0。</li>
+</ul>
+<h3 id="3-Go调度器调度场景"><a href="#3-Go调度器调度场景" class="headerlink" title="3 Go调度器调度场景"></a>3 Go调度器调度场景</h3><ul>
+<li>局部性：G1使用<code>go func()</code>创建的G2优先加入P1的本地队列</li>
+<li>GO的功能：G1运行完成后，M上运行的goroutine切换为G0,G0负责调度时协程切换，从P的本地队列取G2，从G0切换到G2，开始运行</li>
+<li>本地队列没有满：新创建的G优先放入本地队列</li>
+<li>本地队列容量不足：创建多个G本地队列容量不足时，取前一半放置到全局队列</li>
+<li>自旋线程：创建G时，运行的G会尝试唤醒其他空闲的P和M组合去执行，没有G但是为运行状态的线程就是自旋线程</li>
+<li>偷G：优先从全局队列偷G，全局队列为空时，则从其他的P偷G</li>
+<li>不让处于自旋状态的线程销毁，最多GOMAXPROCS个自旋线程</li>
+<li>G进行了阻塞系统调用，则M和P立即解绑，P本地队列或全局队列有G，且有空闲M1，则唤醒M1和它绑定，否则P加入空闲P列表</li>
+<li>G进行非阻塞系统调用，则M和P立即解绑。但是M会记住P,G和M退出系统调用时，优先获取P，否则其他空闲P，否则G进入全局队列，M因为没有P绑定进入休眠</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/05/22/Golang-03-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Golang-03-内存分配</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/28/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-01-%E6%95%B0%E7%BB%84/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">golang数据结构-01-数组</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Golang%E8%B0%83%E5%BA%A6%E5%99%A8%E7%9A%84%E7%94%B1%E6%9D%A5"><span class="nav-text">1 Golang调度器的由来</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E5%8D%95%E8%BF%9B%E7%A8%8B%E6%97%B6%E4%BB%A3%E4%B8%8D%E9%9C%80%E8%A6%81%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-text">1.1 单进程时代不需要调度器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E6%97%B6%E4%BB%A3%E7%9A%84%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-text">1.2 多进程&#x2F;线程时代的调度器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-%E5%8D%8F%E7%A8%8B%E6%8F%90%E9%AB%98CPU%E5%88%A9%E7%94%A8%E7%8E%87"><span class="nav-text">1.3 协程提高CPU利用率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-Go%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8D%8F%E7%A8%8Bgoroutine"><span class="nav-text">1.4 Go语言的协程goroutine</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-%E8%A2%AB%E5%BA%9F%E5%BC%83%E7%9A%84goroutine%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-text">1.5 被废弃的goroutine调度器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-goroutine-%E8%B0%83%E5%BA%A6%E5%99%A8%E7%9A%84-GMP-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="nav-text">2 goroutine 调度器的 GMP 模型的设计思想</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-GMP"><span class="nav-text">2.1 GMP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E8%B0%83%E5%BA%A6%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%AD%96%E7%95%A5"><span class="nav-text">2.2 调度器的设计策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-go-func-%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B"><span class="nav-text">2.3 go func()调度流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-%E8%B0%83%E5%BA%A6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">2.4 调度器的生命周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Go%E8%B0%83%E5%BA%A6%E5%99%A8%E8%B0%83%E5%BA%A6%E5%9C%BA%E6%99%AF"><span class="nav-text">3 Go调度器调度场景</span></a></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

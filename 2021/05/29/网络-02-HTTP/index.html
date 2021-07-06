@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        网络-02-HTTP |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">网络-02-HTTP</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-05-29 22:23:34
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/HTTP/">HTTP</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-HTTP常见面试题"><a href="#1-HTTP常见面试题" class="headerlink" title="1 HTTP常见面试题"></a>1 HTTP常见面试题</h3><h4 id="1-1-HTTP基本概念"><a href="#1-1-HTTP基本概念" class="headerlink" title="1.1 HTTP基本概念"></a>1.1 HTTP基本概念</h4><h5 id="1-1-1-HTTP是什么"><a href="#1-1-1-HTTP是什么" class="headerlink" title="1.1.1 HTTP是什么"></a>1.1.1 HTTP是什么</h5><p>超文本传输协议，HyperText Transfer Protocol</p>
+<ul>
+<li>协议<ul>
+<li>协：两个以上的参与者</li>
+<li>议：对参与者的一种行为约定和规范</li>
+</ul>
+</li>
+<li>传输：两点之间传输数据，允许中间有中转或接力</li>
+<li>超文本：文字、图片、音频、视频等超文本的数据；最关键有超链接，能够在超文本之间跳转</li>
+</ul>
+<h5 id="1-1-2-HTTP常见状态码"><a href="#1-1-2-HTTP常见状态码" class="headerlink" title="1.1.2 HTTP常见状态码"></a>1.1.2 HTTP常见状态码</h5><img src="/images/网络/02_01_http常见状态码.jpg" width="80%" height="80%">
+
+<ul>
+<li><p>1xx：提示信息，是协议处理中的一种中间状态</p>
+</li>
+<li><p>2xx：成功状态码</p>
+<ul>
+<li>200 OK：成功，一切正常</li>
+<li>204 No Content：与200 OK基本相同，但响应头没有body数据</li>
+<li>206 Partial Content：应用于HTTP分块下载或断点续传，表示响应返回的body数据不是资源的全部，而是其中的一部分</li>
+</ul>
+</li>
+<li><p>3xx：客户端请求的资源发生了变动，需要客户端用新的URL重新发送请求获取资源，也就是重定向</p>
+<ul>
+<li>301 Moved Permanently：永久重定向，请求的资源已经不存在，需改用新的URL再次访问</li>
+<li>302 Found：临时重定向，请求的资源还在，暂时需要用另一个URL来访问</li>
+<li>304：Not Modified：不具有跳转的含义，表示资源未修改，重定向已存在的缓冲文件，也称缓存重定向</li>
+</ul>
+</li>
+<li><p>4xx：客户端报文错误</p>
+<ul>
+<li>400 Bad Request：客户端请求报文错误，是个笼统的错误</li>
+<li>403 Forbidden：服务器禁止访问资源</li>
+<li>404 Not Found：请求的资源在服务器上不存在或未找到，所以无法提供给客户端</li>
+</ul>
+</li>
+<li><p>5xx：服务器内部错误</p>
+<ul>
+<li>500 Internal Server Error：笼统的服务器端错误码</li>
+<li>501 Not Implemented：客户端请求的功能还不支持</li>
+<li>502 Bad Gateway：通常是服务器作为网关或代理返回的错误码，表示服务器自身工作正常，访问后端服务器发生了错误</li>
+<li>503 Service Unavailable：服务器当前很忙，暂时无法响应请求</li>
+</ul>
+<h5 id="1-1-3-HTTP常见字段"><a href="#1-1-3-HTTP常见字段" class="headerlink" title="1.1.3 HTTP常见字段"></a>1.1.3 HTTP常见字段</h5></li>
+<li><p>客户端</p>
+<ul>
+<li>host：客户端发送请求时，用来指定服务器的域名；<code>www.a.com</code></li>
+<li>Connection：客户端要求服务器使用TCP持久连接，以便其他请求复用；<code>Keep-Alive</code></li>
+<li>Accept：客户端声明自己接受的数据格式；<code>*/*</code></li>
+<li>Accept-Encoding：指明自己接受的压缩方式；<code>gzip</code>，<code>deflate</code></li>
+</ul>
+</li>
+<li><p>服务端</p>
+<ul>
+<li>Content-Length：服务器返回数据时，表明本次回应数据长度（字节数）</li>
+<li>Content-Type：服务器回应时，告诉客户端本次返回的数据格式；<code>text/html</code></li>
+<li>Content-Encoding：指明数据的压缩方法；<code>gzip</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="1-2-GET与POST"><a href="#1-2-GET与POST" class="headerlink" title="1.2 GET与POST"></a>1.2 GET与POST</h4><blockquote>
+<p>GET与POST的区别</p>
+</blockquote>
+<ul>
+<li>GET：请求从服务器获取资源</li>
+<li>POST：向URI指定的资源提交数据，数据就放在报文的body里</li>
+</ul>
+<blockquote>
+<p>安全与幂等</p>
+</blockquote>
+<ul>
+<li>安全：请求方法不会破坏服务器上的资源</li>
+<li>幂等：多次执行相同的操作，结果是一样的</li>
+</ul>
+<p>因此GET是安全与幂等的，而POST不是</p>
+<h4 id="1-3-HTTP特性"><a href="#1-3-HTTP特性" class="headerlink" title="1.3 HTTP特性"></a>1.3 HTTP特性</h4><h5 id="1-3-1-HTTP-1-1的优点"><a href="#1-3-1-HTTP-1-1的优点" class="headerlink" title="1.3.1 HTTP/1.1的优点"></a>1.3.1 HTTP/1.1的优点</h5><ul>
+<li>简单<ul>
+<li>HTTP基本的报文格式就是header+body，头部信息也是key-value简单文本的形式，易于理解</li>
+</ul>
+</li>
+<li>灵活和易于扩展<ul>
+<li>HTTP协议里的各类请求方法、URI/URL、状态码、头字段等每个组成允许开发人员自定义和扩充</li>
+<li>HTTP工作在应用层，下层可以随意变化<ul>
+<li>HTTPS：在HTTP与TCP层之间增加了SSL/TLS安全传输层</li>
+<li>HTTP/3：把TCP层换成了基于UDP的QUIC</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>应用广泛和跨平台</li>
+</ul>
+<h5 id="1-3-2-HTTP-1-1的缺点"><a href="#1-3-2-HTTP-1-1的缺点" class="headerlink" title="1.3.2 HTTP/1.1的缺点"></a>1.3.2 HTTP/1.1的缺点</h5><ul>
+<li>无状态<ul>
+<li>好处：服务器不会去记忆HTTP的状态，不需要额外的资源来记录状态信息，减轻服务器的负担</li>
+<li>坏处：服务器没有记忆能力，在完成有关联性的操作时会比较麻烦<ul>
+<li>Cookie：通过在请求和响应报文中写入 Cookie 信息来控制客户端的状态</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>明文传输<ul>
+<li>好处：便于调试</li>
+<li>坏处：信息裸奔</li>
+</ul>
+</li>
+<li>不安全<ul>
+<li>通信使用明文，内容可能会被窃听</li>
+<li>不验证通信方身份，可能遭遇伪装</li>
+<li>无法证明报文完整性，可能已遭篡改</li>
+</ul>
+</li>
+</ul>
+<h5 id="1-3-3-HTTP-1-1的性能"><a href="#1-3-3-HTTP-1-1的性能" class="headerlink" title="1.3.3 HTTP/1.1的性能"></a>1.3.3 HTTP/1.1的性能</h5><p>HTTP 协议是基于 TCP/IP，并且使用了「请求 - 应答」的通信模式<br><img src="/images/网络/02_01_队头阻塞.jpg" width="60%" height="60%"></p>
+<ul>
+<li>长连接：减少了 TCP 连接的重􏰁复建立和断开所造成的额外开销，减轻了服务器端的负载</li>
+<li>管道网络传输：在同一个TCP连接里面，客户端可以发起多个请求，只要第一个请求发出去了，不必等其回来，就可以发第二个请求出去，可以减少整体的响应时间</li>
+<li>队头阻塞：当顺序发送的请求序列中的一个请求因为某种原因被阻塞时，在后面排队的所有请求也一同被阻塞了，会招致客户端一直请求不到数据，这也就是「队头阻塞」</li>
+</ul>
+<h4 id="1-4-HTTP与HTTPS"><a href="#1-4-HTTP与HTTPS" class="headerlink" title="1.4 HTTP与HTTPS"></a>1.4 HTTP与HTTPS</h4><h5 id="1-4-1-HTTP与HTTPS的区别"><a href="#1-4-1-HTTP与HTTPS的区别" class="headerlink" title="1.4.1 HTTP与HTTPS的区别"></a>1.4.1 HTTP与HTTPS的区别</h5><p>SSL：Secure Sockets Layer<br>TLS：Transport Layer Security</p>
+<img src="/images/网络/02_01_http与https.jpg" width="60%" height="60%">
+
+<ul>
+<li>安全性：明文传输 vs 加密传输</li>
+<li>建立连接过程：TCP三次握手 vs TCP三次握手&amp;SSL/TLS握手</li>
+<li>端口号：80 vs 443</li>
+<li>数字证书：HTTPS需要向CA申请数字证书，来保证服务器的身份是可信的</li>
+</ul>
+<h5 id="1-4-2-HTTPS解决HTTP的哪些问题"><a href="#1-4-2-HTTPS解决HTTP的哪些问题" class="headerlink" title="1.4.2 HTTPS解决HTTP的哪些问题"></a>1.4.2 HTTPS解决HTTP的哪些问题</h5><ul>
+<li>窃听风险：混合加密，交互信息无法被窃取</li>
+<li>篡改风险：摘要算法，无法篡改通信内存，篡改了不能正常显示</li>
+<li>冒充风险：服务器公钥放入数字证书中，解决了冒充的风险</li>
+</ul>
+<h5 id="1-4-3-HTTPS是如何解决上面的三个风险的"><a href="#1-4-3-HTTPS是如何解决上面的三个风险的" class="headerlink" title="1.4.3 HTTPS是如何解决上面的三个风险的"></a>1.4.3 HTTPS是如何解决上面的三个风险的</h5><img src="/images/网络/02_01_摘要算法.jpg" width="60%" height="60%">
+
+<ul>
+<li>混合加密<ul>
+<li>在通信建立前采用 非对称加密 的方式交换会话密钥；非对称加密使用两个密钥，公钥可以任意分发而私钥保密，解决了密钥交换问题，但是速度慢</li>
+<li>在通信过程中全部使用对称加密的会话密钥加密明文数据；只使用一个密钥，运算速度快，密钥必须保密，无法做到安全的密钥交换</li>
+</ul>
+</li>
+<li>摘要算法：摘要算法用来实现完整性，能够为数据生成独一无二的「指纹」，用于校验数据的完整性，解决了篡改的⻛险</li>
+<li>数字证书：借助第三方权威机构 CA (数字证书认证机构)，将服务器公钥放在数字证书(由数字证书认证机构颁发)中，只要证书是可信的，公钥就是可信的</li>
+</ul>
+<img src="/images/网络/02_01_数字证书.jpg" width="60%" height="60%">
+
+<h5 id="1-4-4-HTTPS-是如何建立连接的-其间交互了什么"><a href="#1-4-4-HTTPS-是如何建立连接的-其间交互了什么" class="headerlink" title="1.4.4 HTTPS 是如何建立连接的?其间交互了什么?"></a>1.4.4 HTTPS 是如何建立连接的?其间交互了什么?</h5><ul>
+<li>(1)ClientHello：客户端主要向服务器发送的信息<ul>
+<li>1.客户端支持SSL/TLS协议版本</li>
+<li>2.客户端生产的随机数<code>Client Random</code>，用于生产会话秘钥</li>
+<li>3.客户端支持的密码套件列表</li>
+</ul>
+</li>
+<li>(2)ServerHello：<ul>
+<li>1.确认SSL/TLS协议版本</li>
+<li>2.服务器生产的随机数<code>Server Random</code>，用于生产会话秘钥</li>
+<li>3.确认的密码套件列表</li>
+<li>4.服务器的数字证书</li>
+</ul>
+</li>
+<li>(3)客户端回应<ul>
+<li>1.通过浏览器或者操作系统的CA公钥，确认服务器数字证书的真实性；如果真实性没有问题，从中取出服务器的公钥</li>
+<li>2.一个随机数<code>pre-master key</code>，该随机数会被服务器公钥加密</li>
+<li>3.加密通信算法改变通知，表示随后的信息都用 会话秘钥 加密通信</li>
+<li>4.客户端握手结束通知，表示客户端的握手阶段已经结束。这一项同时把之前所有内容的发送的数据做个摘要，用来供服务端校验</li>
+</ul>
+</li>
+<li>(4)服务器的最后回应<ul>
+<li>1.基于协商的加密算法和三个随机数，计算本次通信的会话秘钥</li>
+<li>2.加密通信算法改变通知，表示随后的信息都将用「会话秘钥」加密通信</li>
+<li>3.服务器握手结束通知，表示服务器的握手阶段已经结束。这一项同时把之前所有内容的发送的数据做个摘要，用来供客户端校验</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-5-HTTP-1-1、HTTP-2、HTTP-3演变"><a href="#1-5-HTTP-1-1、HTTP-2、HTTP-3演变" class="headerlink" title="1.5 HTTP/1.1、HTTP/2、HTTP/3演变"></a>1.5 HTTP/1.1、HTTP/2、HTTP/3演变</h4><blockquote>
+<p>HTTP/1.1 相比HTTP/1.0提高了什么性能</p>
+</blockquote>
+<ul>
+<li>使用TCP长连接的方式改善了HTTP/1.0短连接造成的性能开销</li>
+<li>支持管道网络传输，只要第一个请求发出去了，不必等其回来，就可以发送第二个请求出去，可以减少整体的响应时间</li>
+</ul>
+<p>缺陷</p>
+<ul>
+<li>请求/响应头部未经压缩，首部信息越多延迟越大，只能压缩Body的部分</li>
+<li>发送冗长的首部，每次互相发送相同的首部造成浪费较多</li>
+<li>服务器是按请求的顺序响应的，可能产生队头阻塞现象</li>
+<li>没有请求优先级控制</li>
+<li>请求只能从客户端开始，服务器只能被动响应</li>
+</ul>
+<blockquote>
+<p>HTTP/2对HTTP/1.1的性能优化</p>
+</blockquote>
+<ul>
+<li>头部压缩：HPACK 算法:在客户端和服务器同时维护一张头信息表，所有字段都会存入这个表，生成一个索引号，以后就不发送同样字段了，只发送索引号</li>
+<li>二进制格式：头信息和数据体都是二进制，并且统称为帧(frame):头信息帧和数据帧；无需再将明文报文转换成二进制，增加了数据传输的效率</li>
+<li>数据流：HTTP/2 的数据包不是按顺序发送的，同一个连接里面连续的数据包，可能属于不同的回应。每个请求或回应的所有数据包，称为一个数据流( Stream )。每个数据流都标记着一个独一无二的编号，其中规 定客户端发出的数据流编号为奇数， 服务器发出的数据流编号为偶数；客户端还可以指定数据流的优先级。优先级高的请求，服务器就先响应该请求</li>
+<li>多路复用：在一个连接中并发处理多个请求或回应，不用按照顺序一一对应，降低了延迟，大幅度提高了连接的利用率</li>
+<li>服务器推送：在一定程度上改善了传统的请求-应答模式，服务器不再是被动地响应，也可以主动向客户端发送消息；例如主动推送JS/CSS等静态资源</li>
+</ul>
+<blockquote>
+<p>HTTP/3对HTTP/2的优化</p>
+</blockquote>
+<p>多个HTTP请求在复用一个TCP连接，下层的TCP协议是不知道有多少个HTTP请求的，所以一旦发生丢包现象，就会触发TCP的重传机制，这样在一个TCP连接中的所有HTTP请求都必须等待这个丢了的包被重传回来。所以HTTP/3把HTTP/2下层的TCP协议改成了UDP</p>
+<p>基于UDP的QUIC协议可以实现类似TCP的可靠性传输</p>
+<ul>
+<li>QUIC有自己的一套机制可以保证传输的可靠性。某个流发送丢包时，只会阻塞这个流，其他流不会受到影响</li>
+<li>TLS升级成最新的1.3版本；头部压缩算法也升级成QPack</li>
+<li>HTTPS要建立一个连接要花费6次交互，QUIC直接把以往的TCP和TLS/1.3的6次交互合并成了3次，减少交互次数</li>
+</ul>
+<h3 id="2-HTTP-1-1如何优化"><a href="#2-HTTP-1-1如何优化" class="headerlink" title="2 HTTP/1.1如何优化"></a>2 HTTP/1.1如何优化</h3><h4 id="2-1-如何避免发送HTTP请求"><a href="#2-1-如何避免发送HTTP请求" class="headerlink" title="2.1 如何避免发送HTTP请求"></a>2.1 如何避免发送HTTP请求</h4><ul>
+<li>缓存<ul>
+<li>对于一些具有重复性的HTTP请求，比如每次请求的数据都一样。客户端会把第一次请求以及响应的数据保存在本地磁盘上，其中将请求的 URL 作为 key，而响应作为 value，两者形成映射关系；后续相同请求时直接读取本地的数据，不必通过网络获取服务器的响应了。</li>
+</ul>
+</li>
+<li>过期<ul>
+<li>服务器在发送 HTTP 响应时，会估算一个过期的时间，并把这个信息放到响应头部中，这样客户端在查看响应头部的信息时，一旦发现缓存的响应是过期的，则就会􏰁新发送网络请求</li>
+</ul>
+</li>
+<li>Etag<ul>
+<li>Etag存储第一次响应头部中的摘要，这个摘要唯一标志响应的资源</li>
+<li>服务器收到请求后，将本地资源的摘要与请求中的摘要作对比。不同，响应最新资源；一致，返回不含包体的304 Not Modified响应</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-2-如何减少HTTP请求次数"><a href="#2-2-如何减少HTTP请求次数" class="headerlink" title="2.2 如何减少HTTP请求次数"></a>2.2 如何减少HTTP请求次数</h4><ul>
+<li>减少重定向请求次数：<ul>
+<li>将原本由客户端处理的􏰁重定向请求，交给代理服务器处理，这样可以减少􏰁定向请求的次数</li>
+</ul>
+</li>
+<li>合并请求<ul>
+<li>方法：合并请求的方式就是合并资源，以一个大资源的请求替换多个小资源的请求</li>
+<li>优点：<ul>
+<li>减少了重复发送的HTTP头部</li>
+<li>减少TCP连接的数量，省去了TCP握手和慢启动过程耗费的时间</li>
+</ul>
+</li>
+<li>缺点：当大资源中的某一个小资源发生变化后，客户端必须重新下载整个完整的大资源文件</li>
+<li>例子：<ul>
+<li>多个小图片合并成一个大图片</li>
+<li>webpack打包工具将js/CSS等资源合并打包成大文件</li>
+<li>图片base64编码</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>延迟请求：按需请求</li>
+</ul>
+<h4 id="2-3-如何减少HTTP响应的数据大小"><a href="#2-3-如何减少HTTP响应的数据大小" class="headerlink" title="2.3 如何减少HTTP响应的数据大小"></a>2.3 如何减少HTTP响应的数据大小</h4><ul>
+<li>无损压缩：经过压缩，信息不被破坏，还能恢复到压缩前的原样；gzip, deflate, br</li>
+<li>有损压缩：解压的数据会与原始数据不同但是非常接近，舍弃次要数据，牺牲质量减少数据量；可以通过 HTTP 请求头部中的 Accept 字段里的「 q 质量􏰀因子」，告诉服务器期望的资源质量</li>
+</ul>
+<h3 id="3-HTTPS-RSA握手解析"><a href="#3-HTTPS-RSA握手解析" class="headerlink" title="3 HTTPS RSA握手解析"></a>3 HTTPS RSA握手解析</h3><h4 id="3-1-TSL握手过程"><a href="#3-1-TSL握手过程" class="headerlink" title="3.1 TSL握手过程"></a>3.1 TSL握手过程</h4><img src="/images/网络/02_03_TSL握手过程.jpg" width="60%" height="60%">
+
+<h4 id="3-2-RSA握手过程"><a href="#3-2-RSA握手过程" class="headerlink" title="3.2 RSA握手过程"></a>3.2 RSA握手过程</h4><h5 id="3-2-1-TLS第一次握手：Client-Hello"><a href="#3-2-1-TLS第一次握手：Client-Hello" class="headerlink" title="3.2.1 TLS第一次握手：Client Hello"></a>3.2.1 TLS第一次握手：<code>Client Hello</code></h5><ul>
+<li>TLS版本号</li>
+<li>支持的密码套件列表</li>
+<li>生成的随机数<code>Client Random</code>：这个随机数会被服务器保留，它是生成对称加密秘钥的材料之一</li>
+</ul>
+<h5 id="3-2-2-TLS第二次握手：Server-Hello"><a href="#3-2-2-TLS第二次握手：Server-Hello" class="headerlink" title="3.2.2 TLS第二次握手：Server Hello"></a>3.2.2 TLS第二次握手：<code>Server Hello</code></h5><ul>
+<li>确认的TLS版本号</li>
+<li>选择的密码套件<ul>
+<li>Cipher Suite: TLS_RSA_WITH_AES_128_GCM_SHA256</li>
+<li>密钥交换算法 + 签名算法 + 对称加密算法 + 摘要算法</li>
+<li>with前面两个单词，第一个是秘钥交换算法，第二个是证书的验证算法</li>
+</ul>
+</li>
+<li>生成的随机数<code>Server Random</code></li>
+<li>Server Certificate</li>
+<li>Server Hello Done</li>
+</ul>
+<h5 id="3-2-3-客户端验证证书"><a href="#3-2-3-客户端验证证书" class="headerlink" title="3.2.3 客户端验证证书"></a>3.2.3 客户端验证证书</h5><ul>
+<li>数字证书包含的信息：认证公钥持有者的身份<ul>
+<li>公钥</li>
+<li>持有者信息</li>
+<li>CA的信息</li>
+<li>CA对这份文件的数字签名及使用的算法</li>
+<li>证书有效期</li>
+<li>其他额外信息</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>证书签名及校验</p>
+</blockquote>
+<img src="/images/网络/02_03_证书签名及校验.jpg" width="80%" height="80%">
+
+<blockquote>
+<p>证书链</p>
+</blockquote>
+<p>证书的验证过程中还存在一个证书信任链的问题，因为我们向 CA 申请的证书一般不是根证书签发的， 而是由中间证书签发的<br>总括来说，由于用户信任 GlobalSign，所以由 GlobalSign 所担保的 baidu.com 可以被信任，另外由于用户信任操作系统或浏览器的软件商，所以由软件商预载了根证书的 GlobalSign 都可被信任</p>
+<img src="/images/网络/02_03_证书验证信任流程.jpg" width="80%" height="80%">
+
+<h5 id="3-2-4-TLS第三次握手"><a href="#3-2-4-TLS第三次握手" class="headerlink" title="3.2.4 TLS第三次握手"></a>3.2.4 TLS第三次握手</h5><ul>
+<li>客户端验证完证书后，就会生成一个新的随机数 (pre-master)，用服务器 的 RSA 公钥加密该随机数，通过「Change Cipher Key Exchange」消息传给服务端</li>
+<li>基于三个随机数，生成会话密钥(Master Secret，发一个「Change Cipher Spec」，告诉服务端开始使用加密方式发送消息</li>
+<li>客户端再发一个「Encrypted Handshake Message(Finishd)」消息，把之前所有发送的数据做个摘要，再用会话密钥(master secret)加密一下，让服务器做个验证，验证加密通信是否可用和之前握手信息是否有被中途篡改过。</li>
+</ul>
+<h5 id="3-2-5-TLS-第四次握手"><a href="#3-2-5-TLS-第四次握手" class="headerlink" title="3.2.5 TLS 第四次握手"></a>3.2.5 TLS 第四次握手</h5><ul>
+<li>Change Cipher Spec</li>
+<li>Encrypted Handshake Message</li>
+</ul>
+<h4 id="3-3-RSA-算法的缺陷"><a href="#3-3-RSA-算法的缺陷" class="headerlink" title="3.3 RSA 算法的缺陷"></a>3.3 RSA 算法的缺陷</h4><p>使用 RSA 密钥协商算法的最大问题是不支持前向保密，DH密钥交换过程中，即使第三⽅截获了 TLS 握⼿阶段传递的公钥，在不知道的私钥的情况下，也是⽆法计算出密钥的，⽽且每⼀次对称加密密钥都是实时⽣成的，实现前向保密􀌶<br><img src="/images/网络/02_03_DH加密算法.jpg" width="80%" height="80%"></p>
+<h3 id="4-HTTPS-ECDHE握手解析"><a href="#4-HTTPS-ECDHE握手解析" class="headerlink" title="4 HTTPS ECDHE握手解析"></a>4 HTTPS ECDHE握手解析</h3><h4 id="4-1-离散对数"><a href="#4-1-离散对数" class="headerlink" title="4.1 离散对数"></a>4.1 离散对数</h4><p>当模数 p 是一个很大的质数，即使知道底数 a 和真数 b ，在现有的计算机的计算水平是几乎无法算出离散对数的<br><img src="/images/网络/02_04_离散对数.jpg" width="80%" height="80%"> </p>
+<h4 id="4-2-DH算法"><a href="#4-2-DH算法" class="headerlink" title="4.2 DH算法"></a>4.2 DH算法</h4><p>P：模数，公开，G：底数，公开；一方的私钥：a，保密；另一方的私钥：b，保密</p>
+<ul>
+<li>小红的公钥A：<code>A = G ^ a ( mod P )</code>，公开；执行<code>B ^ a (mod P)=K</code></li>
+<li>小明的公钥B：<code>B = G ^ b ( mod P )</code>，公开；执行<code>A ^ b (mod P)=K</code></li>
+<li><code>K=A^b mod P)=(G^a mod P)^b mod P=G^ab mod P = (G^b mod P)^a mod P=B^a mod P</code></li>
+<li>K 就是小红和小明之间用的对称加密秘钥</li>
+</ul>
+<h4 id="4-3-DHE算法"><a href="#4-3-DHE算法" class="headerlink" title="4.3 DHE算法"></a>4.3 DHE算法</h4><p>基于私钥生成的方式，DH算法分为</p>
+<ul>
+<li>static DH算法，已废弃</li>
+<li>DHE算法</li>
+</ul>
+<p>让双方的私钥在每次密钥交换通信时，都是随机生成的、临时的，这个方式也就是 DHE 算法，E 全称是 ephemeral(临时性的；每个通信过程 的私钥都是没有任何关系的，都是独立的，这样就保证了 前向安全</p>
+<h4 id="4-4-ECDHE算法"><a href="#4-4-ECDHE算法" class="headerlink" title="4.4 ECDHE算法"></a>4.4 ECDHE算法</h4><p>ECDHE 算法是在 DHE 算法的基础上利用了 ECC 椭圆曲线特性，可以用更少的计算􏰀计算出公钥，以及最终的会话密钥</p>
+<ul>
+<li>双方事先确定好使用哪种椭圆曲线，和曲线上的基点 G，这两个参数都是公开的; </li>
+<li>双方各自随机生成一个随机数作为私钥d，并与基点 G相乘得到公钥Q(Q = dG)，此时小红的公私钥为 Q1 和 d1，小明的公私钥为 Q2 和 d2;</li>
+<li>双方交换各自的公钥，最后小红计算点(x1，y1) = d1Q2，小明计算点(x2，y2) = d2Q1，由于椭圆曲线上是可以满足乘法交换和结合律，所以 d1Q2 = d1d2G = d2d1G = d2Q1 ，因此双方的 x 坐标是一样的，所以 它是共享密钥，也就是会话密钥。</li>
+</ul>
+<h4 id="4-5-ECDHE握手过程"><a href="#4-5-ECDHE握手过程" class="headerlink" title="4.5 ECDHE握手过程"></a>4.5 ECDHE握手过程</h4><blockquote>
+<p>TLS第一次握手：Client Hello</p>
+</blockquote>
+<ul>
+<li>TLS版本号</li>
+<li>支持的密码套件列表</li>
+<li>Client Random</li>
+</ul>
+<blockquote>
+<p>TLS第二次握手：Server Hello</p>
+</blockquote>
+<ul>
+<li>确认的TLS版本号</li>
+<li>选择的密码套件<ul>
+<li>TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384<ul>
+<li>密钥协商算法 ECDHE</li>
+<li>签名算法 RSA</li>
+<li>握手后通信使用AES对称算法，密码长度256位，分组模式GCM</li>
+<li>摘要算法 SHA384</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Server Random</li>
+<li>Certificate(证书)</li>
+<li>Server Key Exchange<ul>
+<li>选择了名为 named_curve 的椭圆曲线，选好了椭圆曲线相当于椭圆曲线基点 G 也定好了，这些都会公开给客 户端;</li>
+<li>生成随机数作为服务端椭圆曲线的私钥，保留到本地;</li>
+<li>根据基点 G 和私钥计算出服务端的椭圆曲线公钥，这个会公开给客户端</li>
+</ul>
+</li>
+<li>Server Hello Done</li>
+</ul>
+<blockquote>
+<p>TLS第三次握手</p>
+</blockquote>
+<ul>
+<li>校验证书，生成客户端随机数，加上服务端前面给的信息，生成客户端的椭圆曲线公钥</li>
+<li>Client Key Exchange</li>
+<li>最终的会话密钥，就是用「客户端随机数 + 服务端随机数 + x(ECDHE 算法算出的共享密钥) 」三个材料生成的，计算会话秘钥</li>
+<li>Change Cipher Spec</li>
+<li>Encrypted Handshake Message</li>
+</ul>
+<blockquote>
+<p>TLS 第四次握手</p>
+</blockquote>
+<ul>
+<li>Change Cipher Spec</li>
+<li>Encrypted Handshake Message</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/06/12/%E7%BD%91%E7%BB%9C-02-HTTP-%E4%B8%8B/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">网络-02-HTTP-下</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/05/28/%E7%BD%91%E7%BB%9C-01-TCP-IP%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">网络-01-TCP/IP网络模型</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-HTTP%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-text">1 HTTP常见面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-HTTP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">1.1 HTTP基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-1-HTTP%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">1.1.1 HTTP是什么</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-2-HTTP%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-text">1.1.2 HTTP常见状态码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-3-HTTP%E5%B8%B8%E8%A7%81%E5%AD%97%E6%AE%B5"><span class="nav-text">1.1.3 HTTP常见字段</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-GET%E4%B8%8EPOST"><span class="nav-text">1.2 GET与POST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-HTTP%E7%89%B9%E6%80%A7"><span class="nav-text">1.3 HTTP特性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-1-HTTP-1-1%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-text">1.3.1 HTTP&#x2F;1.1的优点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-2-HTTP-1-1%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-text">1.3.2 HTTP&#x2F;1.1的缺点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-3-HTTP-1-1%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-text">1.3.3 HTTP&#x2F;1.1的性能</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-HTTP%E4%B8%8EHTTPS"><span class="nav-text">1.4 HTTP与HTTPS</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-1-HTTP%E4%B8%8EHTTPS%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">1.4.1 HTTP与HTTPS的区别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-2-HTTPS%E8%A7%A3%E5%86%B3HTTP%E7%9A%84%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-text">1.4.2 HTTPS解决HTTP的哪些问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-3-HTTPS%E6%98%AF%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E4%B8%8A%E9%9D%A2%E7%9A%84%E4%B8%89%E4%B8%AA%E9%A3%8E%E9%99%A9%E7%9A%84"><span class="nav-text">1.4.3 HTTPS是如何解决上面的三个风险的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-4-HTTPS-%E6%98%AF%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E7%9A%84-%E5%85%B6%E9%97%B4%E4%BA%A4%E4%BA%92%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-text">1.4.4 HTTPS 是如何建立连接的?其间交互了什么?</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-HTTP-1-1%E3%80%81HTTP-2%E3%80%81HTTP-3%E6%BC%94%E5%8F%98"><span class="nav-text">1.5 HTTP&#x2F;1.1、HTTP&#x2F;2、HTTP&#x2F;3演变</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-HTTP-1-1%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96"><span class="nav-text">2 HTTP&#x2F;1.1如何优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%8F%91%E9%80%81HTTP%E8%AF%B7%E6%B1%82"><span class="nav-text">2.1 如何避免发送HTTP请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E5%A6%82%E4%BD%95%E5%87%8F%E5%B0%91HTTP%E8%AF%B7%E6%B1%82%E6%AC%A1%E6%95%B0"><span class="nav-text">2.2 如何减少HTTP请求次数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E5%A6%82%E4%BD%95%E5%87%8F%E5%B0%91HTTP%E5%93%8D%E5%BA%94%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A4%A7%E5%B0%8F"><span class="nav-text">2.3 如何减少HTTP响应的数据大小</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-HTTPS-RSA%E6%8F%A1%E6%89%8B%E8%A7%A3%E6%9E%90"><span class="nav-text">3 HTTPS RSA握手解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-TSL%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-text">3.1 TSL握手过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-RSA%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-text">3.2 RSA握手过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-1-TLS%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%9AClient-Hello"><span class="nav-text">3.2.1 TLS第一次握手：Client Hello</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-2-TLS%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%9AServer-Hello"><span class="nav-text">3.2.2 TLS第二次握手：Server Hello</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-3-%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6"><span class="nav-text">3.2.3 客户端验证证书</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-4-TLS%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-text">3.2.4 TLS第三次握手</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-5-TLS-%E7%AC%AC%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-text">3.2.5 TLS 第四次握手</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-RSA-%E7%AE%97%E6%B3%95%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="nav-text">3.3 RSA 算法的缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-HTTPS-ECDHE%E6%8F%A1%E6%89%8B%E8%A7%A3%E6%9E%90"><span class="nav-text">4 HTTPS ECDHE握手解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0"><span class="nav-text">4.1 离散对数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-DH%E7%AE%97%E6%B3%95"><span class="nav-text">4.2 DH算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-DHE%E7%AE%97%E6%B3%95"><span class="nav-text">4.3 DHE算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-ECDHE%E7%AE%97%E6%B3%95"><span class="nav-text">4.4 ECDHE算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-ECDHE%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-text">4.5 ECDHE握手过程</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

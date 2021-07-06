@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        OS-01-I/O |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">OS-01-I/O</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-16 13:20:24
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/OS/">OS</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/I-O/">I/O</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-阻塞IO"><a href="#1-阻塞IO" class="headerlink" title="1 阻塞IO"></a>1 阻塞IO</h3><img src="/images/阻塞IO.png" width="80%" height="80%">
+阻塞IO情况下，当用户调用read后，用户线程会被阻塞，直到内核数据就绪且数据从内核缓存区拷贝到用户缓存区之后，read才返回。
+
+<p>阻塞的是两个部分</p>
+<ul>
+<li>CPU把数据从磁盘读到内核缓冲区</li>
+<li>CPU把数据从内核缓冲区拷贝到用户缓冲区</li>
+</ul>
+<h3 id="2-非阻塞IO"><a href="#2-非阻塞IO" class="headerlink" title="2 非阻塞IO"></a>2 非阻塞IO</h3><img src="/images/非阻塞IO.png" width="80%" height="80%">
+
+<ul>
+<li>非阻塞IO情况下，当用户调用read后，如果数据未就绪，内核马上返回<code>EWOULDBLOCK</code>错误，用户线程继续往下执行；</li>
+<li>直到数据被拷贝到用户缓存区，read请求才获取到结果；</li>
+<li>最后一个read调用过程是同步的，需要等待数据拷贝完成；这里的同步指的是内核态的数据拷贝到用户程序的缓存区这个过程。</li>
+</ul>
+<h3 id="3-IO多路复用"><a href="#3-IO多路复用" class="headerlink" title="3 IO多路复用"></a>3 IO多路复用</h3><img src="/images/IO多路复用.png" width="80%" height="80%">
+
+<ul>
+<li>非阻塞IO无可用数据时，应用程序轮询内核也耗费CPU；能否不让它轮询，当内核缓冲区数据准备好了，以事件通知机制告知应用进程数据准备好了</li>
+<li>IO multiplexing：单个进程通过记录跟踪每一个Sock(I/O流)的状态来同时管理多个I/O流，以达到提高服务器的吞吐能力的目的</li>
+<li>实现一个线程监控多个IO请求，哪个IO有请求就把数据从内核拷贝到进程缓冲区，拷贝期间是阻塞的</li>
+<li>现在已经可以通过采用<code>mmap</code>地址映射的方法，达到内存共享效果，避免真复制，提高效率</li>
+</ul>
+<h4 id="3-1-select"><a href="#3-1-select" class="headerlink" title="3.1 select"></a>3.1 select</h4><ul>
+<li>select会修改传入的参数数组，对于一个需要调用多次的函数来说，非常不友好</li>
+<li>如果任何一个sock出现了数据，select仅仅会返回，但是不会告诉具体是哪个sock上有数据，需要自己遍历查找</li>
+<li>单个进程所打开的FD是有一定限制的，它由FD_SETSIZE设置，<code>cat /proc/sys/fs/file-max</code></li>
+<li>不是线程安全的，如果把一个sock加入select，然后另一个线程发现这个sock不用，select不支持收回</li>
+</ul>
+<h4 id="3-2-poll"><a href="#3-2-poll" class="headerlink" title="3.2 poll"></a>3.2 poll</h4><ul>
+<li>去掉最大连接数限制</li>
+<li>不再修改传入的数组</li>
+</ul>
+<h4 id="3-3-epoll"><a href="#3-3-epoll" class="headerlink" title="3.3 epoll"></a>3.3 epoll</h4><ul>
+<li>线程安全</li>
+<li>明确具体是哪个sock有数据，不用自己遍历查找</li>
+<li>epoll内核态管理了各种IO文件描述符，以前用户态发送所有文件描述符到内核态，然后内核态负责筛选返回可用数组。现在epoll模式下所有文件描述符在内核态有序，查询时不用传递文件描述符。</li>
+</ul>
+<h4 id="3-4-epoll的LT和ET"><a href="#3-4-epoll的LT和ET" class="headerlink" title="3.4 epoll的LT和ET"></a>3.4 epoll的LT和ET</h4><ul>
+<li>LT Level Trigger<ul>
+<li>水平触发，效率会低于ET触发，尤其在大并发，大流量的情况下。但是LT对代码编写要求比较低，不容易出现问题。LT模式服务编写上的表现是：只要有数据没有被获取，内核就不断通知你，因此不用担心事件丢失的情况。</li>
+</ul>
+</li>
+<li>ET Edge Trigger<ul>
+<li>边缘触发，效率非常高，在并发，大流量的情况下，会比LT少很多epoll的系统调用，因此效率高。但是对编程要求高，需要细致的处理每个请求，否则容易发生丢失事件的情况。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-同步与异步"><a href="#4-同步与异步" class="headerlink" title="4 同步与异步"></a>4 同步与异步</h3><h4 id="4-1-同步"><a href="#4-1-同步" class="headerlink" title="4.1 同步"></a>4.1 同步</h4><img src="/images/IO多路复用-同步非阻塞.png" width="80%" height="80%">
+
+<p>同步与异步的区别在于：数据从内核空间拷贝到用户空间是否由用户线程完成</p>
+<ul>
+<li>同步阻塞：用户线程维护一个连接，该线程完成数据从读写跟处理全过程，数据读写时线程阻塞</li>
+<li>同步非阻塞：用户线程发出请求后，读请求不会阻塞当前用户线程。不过用户线程需要不断主动去判断数据是否就绪。数据拷贝期间是阻塞的。</li>
+</ul>
+<h4 id="4-2-异步"><a href="#4-2-异步" class="headerlink" title="4.2 异步"></a>4.2 异步</h4><img src="/images/异步IO.png" width="80%" height="80%">
+
+<p>对于异步来说，用户进行读或者写后，将立刻返回，由内核去完成数据读取以及拷贝工作，完成后通知用户，并执行回调函数。用户线程只需要对数据进行处理即可。</p>
+<h4 id="4-3-对比"><a href="#4-3-对比" class="headerlink" title="4.3 对比"></a>4.3 对比</h4><ul>
+<li>同步：发出一个调用后，再没有得到结果之前，该调用就不返回。一旦调用返回，就得到返回值了。由调用者主动等待这个调用的结果。</li>
+<li>异步：调用发出之后，直接返回，没有返回结果。调用发出后，被调用者通过状态、通知来通知调用者，或者通过回调函数处理调用。</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/19/Redis-00-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-00-为什么这么快</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/14/Redis-07-%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E3%80%81%E5%87%BB%E7%A9%BF%E3%80%81%E7%A9%BF%E9%80%8F/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-07-缓存雪崩、击穿、穿透</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%98%BB%E5%A1%9EIO"><span class="nav-text">1 阻塞IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%9D%9E%E9%98%BB%E5%A1%9EIO"><span class="nav-text">2 非阻塞IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="nav-text">3 IO多路复用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-select"><span class="nav-text">3.1 select</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-poll"><span class="nav-text">3.2 poll</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-epoll"><span class="nav-text">3.3 epoll</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-epoll%E7%9A%84LT%E5%92%8CET"><span class="nav-text">3.4 epoll的LT和ET</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BC%82%E6%AD%A5"><span class="nav-text">4 同步与异步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E5%90%8C%E6%AD%A5"><span class="nav-text">4.1 同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E5%BC%82%E6%AD%A5"><span class="nav-text">4.2 异步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-%E5%AF%B9%E6%AF%94"><span class="nav-text">4.3 对比</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

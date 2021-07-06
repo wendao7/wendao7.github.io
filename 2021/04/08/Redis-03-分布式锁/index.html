@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Redis-03-分布式锁 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Redis-03-分布式锁</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-08 22:47:24
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Redis/">Redis</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">分布式锁</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-分布式锁概览"><a href="#1-分布式锁概览" class="headerlink" title="1 分布式锁概览"></a>1 分布式锁概览</h3><p>控制分布式系统之间<code>互斥</code>访问共享资源的一种方式。</p>
+<h4 id="1-1-分布式锁的特点"><a href="#1-1-分布式锁的特点" class="headerlink" title="1.1 分布式锁的特点"></a>1.1 分布式锁的特点</h4><ul>
+<li>互斥性： 同一时刻只能有一个线程持有锁</li>
+<li>可重入性： 同一节点上的同一个线程如果获取了锁之后能够再次获取锁</li>
+<li>锁超时：支持锁超时，防止死锁</li>
+<li>高性能和高可用： 加锁和解锁需要高效，同时也需要保证高可用，防止分布式锁失效</li>
+<li>具备阻塞和非阻塞性：能够及时从阻塞状态中被唤醒</li>
+</ul>
+<h4 id="1-2-分布式锁的实现方式"><a href="#1-2-分布式锁的实现方式" class="headerlink" title="1.2 分布式锁的实现方式"></a>1.2 分布式锁的实现方式</h4><ul>
+<li>数据库</li>
+<li>Redis</li>
+<li>zookeeper</li>
+</ul>
+<h3 id="2-Redis的分布式锁实现"><a href="#2-Redis的分布式锁实现" class="headerlink" title="2 Redis的分布式锁实现"></a>2 Redis的分布式锁实现</h3><h4 id="2-1-初级-setnx-expire"><a href="#2-1-初级-setnx-expire" class="headerlink" title="2.1 初级:setnx+expire"></a>2.1 初级:setnx+expire</h4><ul>
+<li>实现：setnx抢占锁，成功后设置超时时间</li>
+<li>问题：setnx和expire是分开的两步操作，不具有原子性</li>
+</ul>
+<h4 id="2-2-中级-使用Lua脚本"><a href="#2-2-中级-使用Lua脚本" class="headerlink" title="2.2 中级:使用Lua脚本"></a>2.2 中级:使用Lua脚本</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryLock_with_lua</span><span class="params">(String key, String UniqueId, <span class="keyword">int</span> seconds)</span> </span>&#123;</span><br><span class="line">    String lua_scripts = <span class="string">&quot;if redis.call(&#x27;setnx&#x27;,KEYS[1],ARGV[1]) == 1 then&quot;</span> +</span><br><span class="line">            <span class="string">&quot;redis.call(&#x27;expire&#x27;,KEYS[1],ARGV[2]) return 1 else return 0 end&quot;</span>;</span><br><span class="line">    List&lt;String&gt; keys = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    List&lt;String&gt; values = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    keys.add(key);</span><br><span class="line">    values.add(UniqueId);</span><br><span class="line">    values.add(String.valueOf(seconds));</span><br><span class="line">    Object result = jedis.eval(lua_scripts, keys, values);</span><br><span class="line">    <span class="comment">//判断是否成功</span></span><br><span class="line">    <span class="keyword">return</span> result.equals(<span class="number">1L</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-升级-setex"><a href="#2-3-升级-setex" class="headerlink" title="2.3 升级:setex"></a>2.3 升级:setex</h4><blockquote>
+<p><code>set key value [EX seconds][PX milliseconds][NX|XX]</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryLock_with_set</span><span class="params">(String key, String UniqueId, <span class="keyword">int</span> seconds)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>.equals(jedis.set(key, UniqueId, <span class="string">&quot;NX&quot;</span>, <span class="string">&quot;EX&quot;</span>, seconds));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常保证<code>value</code>的唯一性，否则可能出现问题</p>
+<blockquote>
+<p>释放锁的实现：验收value的值，判断锁是否是自己的</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public boolean releaseLock_with_lua(String key,String value) &#123;</span><br><span class="line">    String luaScript = &quot;if redis.call(&#x27;get&#x27;,KEYS[1]) == ARGV[1] then &quot; +</span><br><span class="line">            &quot;return redis.call(&#x27;del&#x27;,KEYS[1]) else return 0 end&quot;;</span><br><span class="line">    return jedis.eval(luaScript, Collections.singletonList(key), Collections.singletonList(value)).equals(1L);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>针对集群情况，会出现问题</p>
+<ul>
+<li>A客户端在Redis的master节点拿到锁</li>
+<li>加锁的key还没有同步到slave节点，master故障，发生故障转移，一个slave节点升级为master节点</li>
+<li>此时B客户端也可以获取同个key的锁，导致多个客户端都拿到锁</li>
+</ul>
+<h4 id="2-4-Redlock算法与Redisson实现"><a href="#2-4-Redlock算法与Redisson实现" class="headerlink" title="2.4 Redlock算法与Redisson实现"></a>2.4 Redlock算法与Redisson实现</h4><p>假设当前有5个独立的redis节点</p>
+<ul>
+<li>1）获取当前unix时间，以毫秒为单位</li>
+<li>2）依次尝试从5个实例，使用相同的key和具有唯一性的value获取锁<ul>
+<li>当向redis请求获取锁时，客户端应该设置一个网络连接和响应超时时间，这个超时时间应该小于锁的失效时间</li>
+<li>例如锁自动失效的时间为10s，则超时时间应该为5-50毫秒之间</li>
+<li>如果服务端没有在规定时间内响应，客户端应该尽快去另一个redis实例请求获取锁</li>
+</ul>
+</li>
+<li>3）客户端使用当前时间减去开始获取锁的时间(步骤1的时间)得到获取锁使用的时间，当前仅当从大多数N/2+1的节点取得锁，且使用的时间小于锁失效的时间，锁才算获取成功</li>
+<li>4）如果取到了锁，key的真正有效时间等于有效时间减去获取锁所使用的时间</li>
+<li>5）如果某些原因，获取锁失败，则客户端应该在所有redis实例上进行解锁</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/11/Redis-04-keys%E6%8C%87%E4%BB%A4/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-04-keys指令</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/08/Redis-02-%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-02-高级数据结构</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E6%A6%82%E8%A7%88"><span class="nav-text">1 分布式锁概览</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-text">1.1 分布式锁的特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-text">1.2 分布式锁的实现方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Redis%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%AE%9E%E7%8E%B0"><span class="nav-text">2 Redis的分布式锁实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E5%88%9D%E7%BA%A7-setnx-expire"><span class="nav-text">2.1 初级:setnx+expire</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E4%B8%AD%E7%BA%A7-%E4%BD%BF%E7%94%A8Lua%E8%84%9A%E6%9C%AC"><span class="nav-text">2.2 中级:使用Lua脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E5%8D%87%E7%BA%A7-setex"><span class="nav-text">2.3 升级:setex</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-Redlock%E7%AE%97%E6%B3%95%E4%B8%8ERedisson%E5%AE%9E%E7%8E%B0"><span class="nav-text">2.4 Redlock算法与Redisson实现</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

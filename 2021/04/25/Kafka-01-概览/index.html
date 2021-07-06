@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Kafka-01-概览 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Kafka-01-概览</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-25 17:48:47
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Kfaka/">Kfaka</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E6%A6%82%E8%A7%88/">概览</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-概览"><a href="#1-概览" class="headerlink" title="1 概览"></a>1 概览</h3><h4 id="1-1-定义"><a href="#1-1-定义" class="headerlink" title="1.1 定义"></a>1.1 定义</h4><ul>
+<li>利用高效可靠的消息传递机制进行平台无关的数据交流</li>
+<li>基于数据通信，来进行分布式系统的集成</li>
+<li>通过提高消息传递和消息排队模型，在分布式环境下扩展进程间通信</li>
+</ul>
+<h4 id="1-2-作用"><a href="#1-2-作用" class="headerlink" title="1.2 作用"></a>1.2 作用</h4><ul>
+<li>解耦</li>
+<li>异步</li>
+<li>削峰</li>
+</ul>
+<h4 id="1-3-对比"><a href="#1-3-对比" class="headerlink" title="1.3 对比"></a>1.3 对比</h4><img src="/images/Kafka/Kafka_01_对比.png" width="80%" height="80%">
+
+<h3 id="2-基本概念和架构"><a href="#2-基本概念和架构" class="headerlink" title="2 基本概念和架构"></a>2 基本概念和架构</h3><h4 id="2-1-架构"><a href="#2-1-架构" class="headerlink" title="2.1 架构"></a>2.1 架构</h4><img src="/images/Kafka/Kafka_01_架构.png" width="80%" height="80%">
+
+<ul>
+<li>Producer：生产者，发送消息的一方；</li>
+<li>Consumer：消费者，接收消息的一方；</li>
+<li>Consumer Group：一个消费组可以包含一个或多个消费者<ul>
+<li>同一消费组中的消费者不会重复消费消息</li>
+<li>不同消费组中的消费者消费消息时互不影响</li>
+<li>通过消费组的方式实现P2P和广播模式</li>
+</ul>
+</li>
+<li>Broker：服务代理节点，Broker 可以简单地看作一个独立的 Kafka 服务节点或 Kafka 服务实例</li>
+</ul>
+<h4 id="2-2-主题、分区、偏移量"><a href="#2-2-主题、分区、偏移量" class="headerlink" title="2.2 主题、分区、偏移量"></a>2.2 主题、分区、偏移量</h4><img src="/images/Kafka/Kafka_01_主题分区.png" width="80%" height="80%">
+
+<ul>
+<li>Topic：Kafka 中的消息以主题为单位进行归类，生产者负责将消息发送到特定的主题，而消费者负责订阅主题并进行消费</li>
+<li>Partition：<ul>
+<li>主题是一个逻辑上的概念，它还可以细分为多个分区，一个分区只属于单个主题</li>
+<li>将Topic进行分区，可以并发读写</li>
+<li>同一主题下的不同分区包含的消息是不同的，分区在存储层面可以看作一个可追加的日志（Log）文件，消息在被追加到分区日志文件的时候都会分配一个特定的偏移量（offset）</li>
+</ul>
+</li>
+<li>Offset： 是消息在分区中的唯一标识，Kafka 通过它来保证消息在分区内的顺序性</li>
+</ul>
+<h4 id="2-3-副本"><a href="#2-3-副本" class="headerlink" title="2.3 副本"></a>2.3 副本</h4><img src="/images/Kafka/Kafka_01_副本.png" width="80%" height="80%">
+
+<ul>
+<li>Replication：<ul>
+<li>副本，是 Kafka 保证数据高可用的方式</li>
+<li>Kafka 同一 Partition 的数据可以在多 Broker 上存在多个副本</li>
+<li>通常只有主副本对外提供读写服务（不支持读写分离），当主副本所在 broker 崩溃或发生网络异常，Kafka 会在 Controller 的管理下会重新选择新的 Leader 副本对外提供读写服务</li>
+</ul>
+</li>
+<li>Record：实际写入 Kafka 中并可以被读取的消息记录。每个 record 包含了 key、value 和 timestamp</li>
+</ul>
+<h4 id="2-4-ZooKeeper"><a href="#2-4-ZooKeeper" class="headerlink" title="2.4 ZooKeeper"></a>2.4 ZooKeeper</h4><img src="/images/Kafka/Kafka_01_zookeeper.png" width="80%" height="80%">
+
+<ul>
+<li>Broker注册：Broker是分布式部署并且之间相互独立，管理注册到集群的所有Broker节点</li>
+<li>Topic注册：在Kafka中，同一个Topic的消息会被分成多个分区并将其分布在多个Broker上；分区信息及与Broker的对应关系由Zookeeper在维护</li>
+<li>生产者负载均衡：将消息合理地发送到这些分布式的Broker上</li>
+<li>消费者负载均衡：多个消费者合理地从对应的 Broker 服务器上接收消息</li>
+</ul>
+<h4 id="2-5-其他"><a href="#2-5-其他" class="headerlink" title="2.5 其他"></a>2.5 其他</h4><ul>
+<li>推拉模式<ul>
+<li>Kafka Producer 向 Broker 发送消息使用 Push 模式</li>
+<li>Consumer 消费采用的 Pull 模式。拉取模式，让 consumer 自己管理 offset，可以提供读取性能</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-6-HW"><a href="#2-6-HW" class="headerlink" title="2.6 HW"></a>2.6 HW</h4><p>Kafka 通过 HW 和 Offset 的管理来决定 Consumer 可以消费哪些数据，已经当前写入的数据</p>
+<p>这是控制消费者可读取消息范围的重要字段。一 个普通消费者只能“看到”Leader 副本上介于 Log Start Offset 和 HW（不含）之间的 所有消息。<br><img src="/images/Kafka/Kafka_01_hw.png" width="80%" height="80%"></p>
+<h3 id="3-使用"><a href="#3-使用" class="headerlink" title="3 使用"></a>3 使用</h3><h4 id="3-1-命令行脚本"><a href="#3-1-命令行脚本" class="headerlink" title="3.1 命令行脚本"></a>3.1 命令行脚本</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">kafka-configs.sh：配置管理脚本</span><br><span class="line">kafka-console-consumer.sh：kafka 消费者控制台</span><br><span class="line">kafka-console-producer.sh：kafka 生产者控制台</span><br><span class="line">kafka-consumer-groups.sh：kafka 消费者组相关信息</span><br><span class="line">kafka-delete-records.sh：删除低水位的日志文件</span><br><span class="line">kafka-log-dirs.sh：kafka 消息日志目录信息</span><br><span class="line">kafka-mirror-maker.sh：不同数据中心 kafka 集群复制工具</span><br><span class="line">kafka-preferred-replica-election.sh：触发 preferred replica 选举</span><br><span class="line">kafka-producer-perf-test.sh：kafka 生产者性能测试脚本</span><br><span class="line">kafka-reassign-partitions.sh：分区重分配脚本</span><br><span class="line">kafka-replica-verification.sh：复制进度验证脚本</span><br><span class="line">kafka-server-start.sh：启动 kafka 服务</span><br><span class="line">kafka-server-stop.sh：停止 kafka 服务</span><br><span class="line">kafka-topics.sh：topic 管理脚本</span><br><span class="line">kafka-verifiable-consumer.sh：可检验的 kafka 消费者</span><br><span class="line">kafka-verifiable-producer.sh：可检验的 kafka 生产者</span><br><span class="line">zookeeper-server-start.sh：启动 zk 服务</span><br><span class="line">zookeeper-server-stop.sh：停止 zk 服务</span><br><span class="line">zookeeper-shell.sh：zk 客户端</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-Kafka-Producer的正常生产步骤"><a href="#3-2-Kafka-Producer的正常生产步骤" class="headerlink" title="3.2 Kafka Producer的正常生产步骤"></a>3.2 Kafka Producer的正常生产步骤</h4><ul>
+<li>1 配置生产者客户端参数产生生产者实例</li>
+<li>2 构建待发送的消息</li>
+<li>3 发送消息</li>
+<li>4 关闭生产者实例</li>
+</ul>
+<p>需要经过拦截器，序列化器和分区器，最终由累加器批量发送至 Broker</p>
+<h4 id="3-3-Kafka-Producer常见配置"><a href="#3-3-Kafka-Producer常见配置" class="headerlink" title="3.3 Kafka Producer常见配置"></a>3.3 Kafka Producer常见配置</h4><ul>
+<li>必要参数<ul>
+<li>bootstrap.server：指定 Kafka 的 Broker 的地址</li>
+<li>key.serializer：key 序列化器</li>
+<li>value.serializer：value 序列化器</li>
+</ul>
+</li>
+<li>常见参数<ul>
+<li>batch.num.messages：默认200，每次批量消息的数量，只对asyc起作用</li>
+<li>request.required.acks：默认0，0 表示 producer 毋须等待 leader 的确认，1 代表需要 leader 确认写入它的本地 log 并立即确认，-1 代表所有的备份都完成后确认。只对 async 模式起作用</li>
+<li>request.timeout.ms：默认值：10000，确认超时时间</li>
+<li>partitioner.class：根据 Key 提供一个分区策略。有时候我们需要相同类型的消息必须顺序处理，这样我们就必须自定义分配策略，从而将相同类型的数据分配到同一个分区中</li>
+<li>producer.type：默认sync，指定消息发送是同步还是异步</li>
+<li>compression.topic：默认none，消息压缩方式，减少网络传输量，降低网络IO，提高性能</li>
+<li>compressed.topics：默认null，指定topic进行压缩</li>
+<li>message.send.max.retries：默认3，最大重试次数</li>
+<li>retry.backoff.ms：默认300，每次尝试增加的额外的间隔时间</li>
+<li>topic.metadata.refresh.interval.ms：默认600000，定期的获取元数据的时间</li>
+<li>queue.buffering.max.ms：默认值：5000，在 producer queue 的缓存的数据最大时间，仅仅 for asyc</li>
+<li>queue.buffering.max.message：默认值：10000，producer 缓存的消息的最大数量，仅仅 for asyc</li>
+<li>queue.enqueue.timeout.ms：默认值：-1，0 当 queue 满时丢掉，负值是 queue 满时 block, 正值是 queue 满时 block 相应的时间，仅仅 for asyc</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-4-Kafka-Consumer"><a href="#3-4-Kafka-Consumer" class="headerlink" title="3.4 Kafka Consumer"></a>3.4 Kafka Consumer</h4><p>每个消费者只能消费所分配到的分区的消息，每一个分区只能被一个消费组中的一个消费者所消费</p>
+<ul>
+<li><p>消费步骤</p>
+<ul>
+<li>1配置客户端，创建消费者</li>
+<li>2订阅主题</li>
+<li>3拉去消息并消费</li>
+<li>4提交消费位移</li>
+<li>5关闭消费者实例</li>
+</ul>
+</li>
+<li><p>Kafka consumer 参数</p>
+</li>
+<li><p>如何保证消息有序：Kafka 在 Topic 级别本身是无序的，只有 partition 上才有序，所以为了保证处理顺序，可以自定义分区器，将需顺序处理的数据发送到同一个 partition</p>
+</li>
+</ul>
+<h4 id="3-5-Kafka-Rebalance"><a href="#3-5-Kafka-Rebalance" class="headerlink" title="3.5 Kafka Rebalance"></a>3.5 Kafka Rebalance</h4><p>rebalance 本质上是一种协议，规定了一个 consumer group 下的所有 consumer 如何达成一致来分配订阅 topic 的每个分区</p>
+<ul>
+<li>什么时候 rebalance<ul>
+<li>组成员发生变更</li>
+<li>订阅主题数发生变更</li>
+<li>订阅主题的分区数发生变更</li>
+</ul>
+</li>
+<li>如何进行组内分区分配<ul>
+<li>Range</li>
+<li>Round-Robin</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-高可用和性能"><a href="#4-高可用和性能" class="headerlink" title="4 高可用和性能"></a>4 高可用和性能</h3><h4 id="4-2-分区与副本"><a href="#4-2-分区与副本" class="headerlink" title="4.2 分区与副本"></a>4.2 分区与副本</h4><p>通常使用分区来提高系统的处理能力，通过副本来保证数据的高可用性。多分区意味着并发处理的能力，这多个副本中，只有一个是 leader，而其他的都是 follower 副本。仅有 leader 副本可以对外提供服务</p>
+<ul>
+<li>为什么follower副本不提供服务：性能和一致性的取舍</li>
+<li>选举：默认从ISR集合中选举follower副本成为leader副本<ul>
+<li>AR（Assigned Replicas）：分区中的所有副本，AR=ISR+OSR</li>
+<li>ISR（In-Sync Replicas）：所有与 leader 副本保持一定程度同步的副本（包括 leader 副本在内）</li>
+<li>OSR（Out-of-Sync Replicas）：与 leader 副本同步滞后过多的副本</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-3-性能优化"><a href="#4-3-性能优化" class="headerlink" title="4.3 性能优化"></a>4.3 性能优化</h4><ul>
+<li>partition并发：不同 Partition 可位于不同机器，因此可以充分利用集群优势，实现机器间的并行处理</li>
+<li>顺序读写磁盘：Kafka 每一个 partition 目录下的文件被平均切割成大小相等（默认一个文件是 500 兆，可以手动去设置）的数据文件， 每一个数据文件都被称为一个段（segment file）, 每个 segment 都采用 append 的方式追加数据</li>
+<li>page cache：按页读写</li>
+<li>预读：Kafka 会将将要消费的消息提前读入内存</li>
+<li>高性能序列化（二进制）</li>
+<li>内存映射</li>
+<li>无锁 offset 管理：提高并发能力</li>
+<li>Java NIO 模型</li>
+<li>批量：批量读写</li>
+<li>压缩：消息压缩，存储压缩，减小网络和 IO 开销</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/26/Kafka-02-%E6%80%A7%E8%83%BD%E7%AF%87/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kafka-02-性能篇</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/22/Redis-12-Cluster/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-12-Cluster</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A6%82%E8%A7%88"><span class="nav-text">1 概览</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E5%AE%9A%E4%B9%89"><span class="nav-text">1.1 定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E4%BD%9C%E7%94%A8"><span class="nav-text">1.2 作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-%E5%AF%B9%E6%AF%94"><span class="nav-text">1.3 对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9E%B6%E6%9E%84"><span class="nav-text">2 基本概念和架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E6%9E%B6%E6%9E%84"><span class="nav-text">2.1 架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E4%B8%BB%E9%A2%98%E3%80%81%E5%88%86%E5%8C%BA%E3%80%81%E5%81%8F%E7%A7%BB%E9%87%8F"><span class="nav-text">2.2 主题、分区、偏移量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E5%89%AF%E6%9C%AC"><span class="nav-text">2.3 副本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-ZooKeeper"><span class="nav-text">2.4 ZooKeeper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-%E5%85%B6%E4%BB%96"><span class="nav-text">2.5 其他</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-HW"><span class="nav-text">2.6 HW</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8"><span class="nav-text">3 使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%84%9A%E6%9C%AC"><span class="nav-text">3.1 命令行脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Kafka-Producer%E7%9A%84%E6%AD%A3%E5%B8%B8%E7%94%9F%E4%BA%A7%E6%AD%A5%E9%AA%A4"><span class="nav-text">3.2 Kafka Producer的正常生产步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-Kafka-Producer%E5%B8%B8%E8%A7%81%E9%85%8D%E7%BD%AE"><span class="nav-text">3.3 Kafka Producer常见配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-Kafka-Consumer"><span class="nav-text">3.4 Kafka Consumer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-Kafka-Rebalance"><span class="nav-text">3.5 Kafka Rebalance</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%AB%98%E5%8F%AF%E7%94%A8%E5%92%8C%E6%80%A7%E8%83%BD"><span class="nav-text">4 高可用和性能</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E5%88%86%E5%8C%BA%E4%B8%8E%E5%89%AF%E6%9C%AC"><span class="nav-text">4.2 分区与副本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-text">4.3 性能优化</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

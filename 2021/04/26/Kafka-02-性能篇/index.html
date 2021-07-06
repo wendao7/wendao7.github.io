@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Kafka-02-性能篇 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Kafka-02-性能篇</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-26 00:02:59
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Kafka/">Kafka</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-性能瓶颈"><a href="#1-性能瓶颈" class="headerlink" title="1 性能瓶颈"></a>1 性能瓶颈</h3><ul>
+<li>网络</li>
+<li>磁盘</li>
+<li>复杂度</li>
+</ul>
+<h3 id="2-通用解决方案"><a href="#2-通用解决方案" class="headerlink" title="2 通用解决方案"></a>2 通用解决方案</h3><ul>
+<li>并发</li>
+<li>压缩</li>
+<li>批量</li>
+<li>缓存</li>
+</ul>
+<h3 id="3-切入点"><a href="#3-切入点" class="headerlink" title="3 切入点"></a>3 切入点</h3><ul>
+<li>Producer</li>
+<li>Broker</li>
+<li>Consumer</li>
+</ul>
+<h3 id="4-具体"><a href="#4-具体" class="headerlink" title="4 具体"></a>4 具体</h3><h4 id="4-1-顺序写"><a href="#4-1-顺序写" class="headerlink" title="4.1 顺序写"></a>4.1 顺序写</h4><ul>
+<li><p>磁盘结构</p>
+<ul>
+<li>盘片</li>
+<li>盘面</li>
+<li>磁道</li>
+<li>扇区</li>
+<li>柱面：盘面中相对位置相同的磁道组成</li>
+</ul>
+</li>
+<li><p>磁盘IO顺序</p>
+<ul>
+<li>寻道：将读写磁头移动到正确的磁道上所需要的时间，目前磁盘的平均寻道时间一般3-15ms</li>
+<li>旋转：判断旋转将请求数据所在扇区移动到读写磁头下方需要的时间<ul>
+<li>取决于磁盘转速，通常用磁盘旋转一周所需时间的1/2表示</li>
+<li>7200rpm -&gt; 60*1000/7200/2=4.17ms</li>
+</ul>
+</li>
+<li>数据传输：完成传输所请求的数据需要的时间，取决于数据传输率<ul>
+<li><p>远小于前两部分耗时，简单计算时可忽略</p>
+<p>Kafka 采用顺序写文件的方式来提高磁盘写入性能。顺序写文件，基本减少了磁盘寻道和旋转的次数</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Kafka 中每个分区是一个有序的，不可变的消息序列，新的消息不断追加到 Partition 的末尾。在 Kafka 中 Partition 只是一个逻辑概念，Kafka 将 Partition 划分为多个 Segment，每个 Segment 对应一个物理文件，Kafka 对 segment 文件追加写</p>
+<p>其他类似：Redis的AOF文件，各种数据库的WAL机制。</p>
+<h4 id="4-2-零拷贝"><a href="#4-2-零拷贝" class="headerlink" title="4.2 零拷贝"></a>4.2 零拷贝</h4><img src="/images/Kafka/Kafka_02_传统IO流程.png" width="80%" height="80%">
+
+<p>四次拷贝</p>
+<ul>
+<li>第一次：读取磁盘文件到操作系统内核缓冲区；</li>
+<li>第二次：将内核缓冲区的数据，copy 到应用程序的 buffer；</li>
+<li>第三步：将应用程序 buffer 中的数据，copy 到 socket 网络发送缓冲区；</li>
+<li>第四次：将 socket buffer 的数据，copy 到网卡，由网卡进行网络传输</li>
+</ul>
+<img src="/images/Kafka/Kafka_02_上下文切换.png" width="80%" height="80%">
+
+<p>零拷贝就是尽量去减少上面数据的拷贝次数，从而减少拷贝的 CPU 开销，减少用户态内核态的上下文切换次数，从而优化数据传输的性能。</p>
+<p>常见的零拷贝思路</p>
+<ul>
+<li>直接I/O：直接 I/O：数据直接跨过内核，在用户地址空间与 I/O 设备之间传递，内核只是进行必要的虚拟存储配置等辅助工作；</li>
+<li>避免内核和用户空间之间的数据拷贝：当应用程序不需要对数据进行访问时，则可以避免将数据从内核空间拷贝到用户空间；</li>
+<li>写时复制：数据不需要提前拷贝，而是当需要修改的时候再进行部分拷贝</li>
+</ul>
+<p>Kafka使用到了mmap和sendfile</p>
+<ul>
+<li>mmap：将内核空间的一段内存区域映射到用户空间。映射成功后，用户对这段内存区域的修改可以直接反映到内核空间，相反，内核空间对这段区域的修改也直接反映用户空间<ul>
+<li>即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用 read,write 等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享</li>
+</ul>
+</li>
+<li>sendfile：数据直接在内核完成输入和输出，不需要拷贝到用户空间再写出去</li>
+</ul>
+<img src="/images/Kafka/Kafka_02_sendfile.png" width="80%" height="80%">
+
+<p>sendfile对应FileChannel.transferTo</p>
+<ul>
+<li>transferTo()方法指示块设备通过 DMA 引擎将数据读取到读取缓冲区中</li>
+<li>然后，将该缓冲区复制到另一个内核缓冲区以暂存到套接字</li>
+<li>最后，套接字缓冲区通过 DMA 复制到 NIC 缓冲区</li>
+</ul>
+<img src="/images/Kafka/Kafka_02_sendfile切换.png" width="80%" height="80%">
+
+<p>副本数从四减少到三，并且这些副本中只有一个涉及 CPU。我们还将上下文切换的数量从四个减少到了两个。</p>
+<h4 id="4-3-PageCache"><a href="#4-3-PageCache" class="headerlink" title="4.3 PageCache"></a>4.3 PageCache</h4><img src="/images/Kafka/Kafka_02_pagecache.png" width="80%" height="80%">
+
+<ul>
+<li>producer 生产消息到 Broker 时，Broker 会使用 pwrite() 系统调用【对应到 Java NIO 的 FileChannel.write() API】按偏移量写入数据，此时数据都会先写入page cache。</li>
+<li>consumer 消费消息时，Broker 使用 sendfile() 系统调用【对应 FileChannel.transferTo() API】，零拷贝地将数据从 page cache 传输到 broker 的 Socket buffer，再通过网络传输。</li>
+<li>page cache中的数据会随着内核中 flusher 线程的调度以及对 sync()/fsync() 的调用写回到磁盘</li>
+<li>如果 consumer 要消费的消息不在page cache里，才会去磁盘读取，并且会顺便预读出一些相邻的块放入 page cache，以方便下一次读取</li>
+</ul>
+<h4 id="4-4-网络模型"><a href="#4-4-网络模型" class="headerlink" title="4.4 网络模型"></a>4.4 网络模型</h4><img src="/images/Kafka/Kafka_02_reactor.png" width="80%" height="80%">
+
+<ul>
+<li>Reactor：把 IO 事件分配给对应的 handler 处理</li>
+<li>Acceptor：处理客户端连接事件</li>
+<li>Handler：处理非阻塞的任务</li>
+</ul>
+<p>传统阻塞IO模型的两个问题</p>
+<ul>
+<li>每个连接都需要独立线程处理</li>
+<li>建立连接后，如果当前线程没有数据可读，线程会阻塞在读操作上，造成资源浪费</li>
+</ul>
+<p>解决</p>
+<ul>
+<li>Reactor 模型基于池化思想，避免为每个连接创建线程，连接完成后将业务处理交给线程池处理；</li>
+<li>基于 IO 复用模型，多个连接共用同一个阻塞对象，不用等待所有的连接。遍历到有新数据可以处理时，操作系统会通知程序，线程跳出阻塞状态，进行业务逻辑处理</li>
+</ul>
+<img src="/images/Kafka/Kafka_02_网络模型.png" width="80%" height="80%">
+
+<h4 id="4-5-批量与压缩"><a href="#4-5-批量与压缩" class="headerlink" title="4.5 批量与压缩"></a>4.5 批量与压缩</h4><img src="/images/Kafka/Kafka_02_producer执行流程.png" width="80%" height="80%"> 
+Kafka Producer 向 Broker 批量发送消息  
+
+<ul>
+<li>Serialize：键和值都根据传递的序列化器进行序列化。优秀的序列化方式可以提高网络传输的效率</li>
+<li>Partition：决定将消息写入主题的哪个分区，默认情况下遵循 murmur2 算法</li>
+<li>Compress：默认情况下，在 Kafka 生产者中不启用压缩.Compression 不仅可以更快地从生产者传输到代理，还可以在复制过程中进行更快的传输。压缩有助于提高吞吐量，降低延迟并提高磁盘利用率</li>
+<li>Accumulate：Accumulate顾名思义，就是一个消息累计器。其内部为每个 Partition 维护一个Deque双端队列，队列保存将要发送的批次数据，Accumulate将数据累计到一定数量，或者在一定过期时间内，便将数据以批次的方式发送出去</li>
+<li>Group Send：记录累积器中分区的批次按将它们发送到的代理分组。批处理中的记录基于 batch.size 和 linger.ms 属性发送到代理</li>
+</ul>
+<p>Producer、Broker 和 Consumer 使用相同的压缩算法，在 producer 向 Broker 写入数据，Consumer 向 Broker 读取数据时甚至可以不用解压缩，最终在 Consumer Poll 到消息时才解压，这样节省了大量的网络和磁盘开销</p>
+<h4 id="4-6-分区并发"><a href="#4-6-分区并发" class="headerlink" title="4.6 分区并发"></a>4.6 分区并发</h4><img src="/images/Kafka/Kafka_02_分区并发.png" width="80%" height="80%">
+
+<p>Kafka 的 Topic 可以分成多个 Partition，每个 Paritition 类似于一个队列，保证数据有序。同一个 Group 下的不同 Consumer 并发消费 Paritition</p>
+<ul>
+<li><p>越多的分区需要打开更多的文件句柄</p>
+<ul>
+<li>在 kafka 的 broker 中，每个分区都会对照着文件系统的一个目录。在 kafka 的数据日志文件目录中，每个日志数据段都会分配两个文件，一个索引文件和一个数据文件</li>
+</ul>
+</li>
+<li><p>客户端 / 服务器端需要使用的内存就越多</p>
+<ul>
+<li>客户端 producer 有个参数 batch.size，默认是 16KB。它会为每个分区缓存消息，一旦满了就打包将消息批量发出</li>
+</ul>
+</li>
+<li><p>降低高可用性</p>
+<ul>
+<li><p>分区越多，每个 Broker 上分配的分区也就越多，当一个发生 Broker 宕机，那么恢复时间将很长。</p>
+<h4 id="4-7-文件结构"><a href="#4-7-文件结构" class="headerlink" title="4.7 文件结构"></a>4.7 文件结构</h4><img src="/images/Kafka/Kafka_02_文件结构.png" width="80%" height="80%">
+</li>
+</ul>
+</li>
+<li><p>segment file 组成：由 2 大部分组成，分别为 index file 和 data file，此 2 个文件一一对应，成对出现。后缀”.index”和“.log”分别表示为 segment 索引文件、数据文件</p>
+</li>
+<li><p>segment 文件命名规则：partion 全局的第一个 segment 从 0 开始，后续每个 segment 文件名为上一个 segment 文件最后一条消息的 offset 值</p>
+</li>
+</ul>
+<p>index 采用稀疏索引，这样每个 index 文件大小有限，Kafka 采用mmap的方式，直接将 index 文件映射到内存，这样对 index 的操作就不需要操作磁盘 IO。mmap的 Java 实现对应 MappedByteBuffer</p>
+<ul>
+<li>按照二分法找到小于 offset 的 segment 的.log 和.index</li>
+<li>用目标 offset 减去文件名中的 offset 得到消息在这个 segment 中的偏移量。</li>
+<li>再次用二分法在 index 文件中找到对应的索引。</li>
+<li>到 log 文件中，顺序查找，直到找到 offset 对应的消息</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/26/Kafka-03-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kafka-03-架构原理</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/25/Kafka-01-%E6%A6%82%E8%A7%88/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kafka-01-概览</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88"><span class="nav-text">1 性能瓶颈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%9A%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">2 通用解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%87%E5%85%A5%E7%82%B9"><span class="nav-text">3 切入点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%85%B7%E4%BD%93"><span class="nav-text">4 具体</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-%E9%A1%BA%E5%BA%8F%E5%86%99"><span class="nav-text">4.1 顺序写</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="nav-text">4.2 零拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-PageCache"><span class="nav-text">4.3 PageCache</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-text">4.4 网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-%E6%89%B9%E9%87%8F%E4%B8%8E%E5%8E%8B%E7%BC%A9"><span class="nav-text">4.5 批量与压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-6-%E5%88%86%E5%8C%BA%E5%B9%B6%E5%8F%91"><span class="nav-text">4.6 分区并发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-7-%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-text">4.7 文件结构</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

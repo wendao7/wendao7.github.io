@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Golang-03-内存分配 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Golang-03-内存分配</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-05-22 11:10:46
+    </span>
+    
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-GMP调度模型"><a href="#1-GMP调度模型" class="headerlink" title="1 GMP调度模型"></a>1 GMP调度模型</h3><h4 id="1-1-GM调度模型的缺陷"><a href="#1-1-GM调度模型的缺陷" class="headerlink" title="1.1 GM调度模型的缺陷"></a>1.1 GM调度模型的缺陷</h4><ul>
+<li>调度锁问题：单一的全局调度锁和集中的状态，导致伸缩性下降。所有和goroutine相关比如创建、完成、重新调度等操作都要争抢这把锁</li>
+<li>G传递问题：在工作线程M之间传递runnable的G，会加大延迟</li>
+<li>Per-M的内存问题<ul>
+<li>基于TCMalloc结构的内存结构，每个M都需要memory cache和其他类型的cache</li>
+<li>然而只有实际运行Go代码才需要这些Per-M Cache，阻塞在系统调用的M并不需要mcache</li>
+<li>正在运行M和进行系统调用的M的比例可能高达1:100</li>
+<li>极大的内存消耗和很差的数据局部性</li>
+</ul>
+</li>
+<li>线程阻塞与从阻塞恢复，导致很大的性能损耗</li>
+</ul>
+<h3 id="2-从new说起"><a href="#2-从new说起" class="headerlink" title="2 从new说起"></a>2 从new说起</h3><h4 id="2-1-new一个对象"><a href="#2-1-new一个对象" class="headerlink" title="2.1 new一个对象"></a>2.1 new一个对象</h4><ul>
+<li>new(TypeA)</li>
+<li>&amp;TypeA{}</li>
+<li>make</li>
+</ul>
+<h4 id="2-2-逃逸分析"><a href="#2-2-逃逸分析" class="headerlink" title="2.2 逃逸分析"></a>2.2 逃逸分析</h4><p>对于有GC的语言, 大部分对象都是在语言运行时的堆中分配的.<br>但是并不是每次new一个对象都会在go的堆上分配, 如果语言编译时能够检测出, 这个对象比较小, 且生命周期不会脱离当前栈的范围, 那么其实是可以把这个对象分配在栈上面的. 这就叫做逃逸分析</p>
+<h4 id="2-3-万物归于mallocgc"><a href="#2-3-万物归于mallocgc" class="headerlink" title="2.3 万物归于mallocgc"></a>2.3 万物归于mallocgc</h4><p>go里面<code>new</code>一个对象，最终编译器生成的是<code>func newobject(typ *_type) unsafe.Pointer</code>方法，里面调用<code>mallocgc</code>方法。<br>而<code>make</code>也会调用<code>mallocgc</code>方法。<code>mallocgc</code>是我们日常写go代码中申请内存的入口。</p>
+<h4 id="2-4-内存分配过程"><a href="#2-4-内存分配过程" class="headerlink" title="2.4 内存分配过程"></a>2.4 内存分配过程</h4><ul>
+<li>对于size为0的对象, 比如一个空的strcut{}, 分配器做了优化, 直接返回一个特殊的全局变量zerobase.</li>
+<li>小于16字节的无指针(noscan)的逃脱的小对象, 比如new(int), 这些直接在每个P上的tiny分配器上分配, 简单的说就是移动指针的方式分配, 小块内存可以分配多个小对象</li>
+<li>如果对象大于16字节小于32K<ul>
+<li>从与当前P绑定的cache中对应的class的span里分配(无锁). 对象中有指针从分配有指针对象的span中分配, 没有指针的从noscan的span分配. </li>
+<li>如果当前P对应的span用完了, 那么从该class对应的后备mcentral中分配一个span</li>
+<li>如果mcentral都没有了, 则从mheap中获取</li>
+<li>mheap没有空闲的, 则mmap从系统获取新的内存. </li>
+<li>一步步往上升, 从per-P cache的无锁到每个class对应的mcentral(有锁, 但有67*2个, 粒度较小), 再到全局锁的mheap. 大部分分配在per-P的mcache就可以解决, 大大减少了全局竞争的可能</li>
+</ul>
+</li>
+<li>如果对象大于32K, 则调用largeAlloc. largeAlloc先从heap中维护的类似于伙伴分配器的地方分配, 如果没有多余的连续空闲页, 则使用mmap从系统分配</li>
+</ul>
+<h3 id="3-Golang-Runtime内存结构"><a href="#3-Golang-Runtime内存结构" class="headerlink" title="3 Golang Runtime内存结构"></a>3 Golang Runtime内存结构</h3><p>在<code>call schedinit</code>中的<code>mallocinit()</code>会计算并初始化<code>Golang</code>虚拟内存布局。</p>
+<h4 id="3-1-arena-spans-bitmap功能描述"><a href="#3-1-arena-spans-bitmap功能描述" class="headerlink" title="3.1 arena, spans, bitmap功能描述"></a>3.1 arena, spans, bitmap功能描述</h4><blockquote>
+<p>arena-512G</p>
+</blockquote>
+<p>为后续Go程序分配对象的地址空间，也就是mallocgc方法设计的内存，也叫go gc heap。<br>为方便管理，把arena区域划分成一个个大小为8KB的page，每个page按照顺序编号，一共有512G/8KB个页</p>
+<blockquote>
+<p>spans-512G/8KB*byte=512M</p>
+</blockquote>
+<p>存放指向span的指针，表示arena中对应的page所属的span。比如分配了一个2个页的span A(地址为&amp;A)，使用page10，page11，那么spans区域spans_start+8<em>9和spans_start+8</em>10的内容都为span A的地址&amp;A. 以此来建立任意地址到span的这样一个索引。</p>
+<p>span本身就已经有了span到其所拥有的地址(page start的index和end的index)的索引, 这样就建立了两者的双向索引。</p>
+<blockquote>
+<p>bitmap-512G/8byte*2bit=16G</p>
+</blockquote>
+<p>用于辅助GC，arena中每个字(8字节)都在bitmap中有两个bit表示其状态，该word是否是指针、是否应该继续扫描</p>
+<h3 id="4-几个重要的结构体"><a href="#4-几个重要的结构体" class="headerlink" title="4 几个重要的结构体"></a>4 几个重要的结构体</h3><img src="/images/Golang/03_整体内存结构.png" width="80%" height="80%">
+* mspan：管理分配不同大小class段的内存块的结构体，一共67*2个class
+* mcache：每个P拥有一个自己的mcache，每个mcache有67*2个mspan和一个tiny分配器
+* mcentral：mcache中每个class的mspan都对应一个后备的全局mcentral，用于分配对应class的mspan给mcache，所有mcentral全局也有67*2个
+* mheap：全局一个
+    * 不同大小的空闲块的list(free/free large)
+    * 对应的已经分配出去的list(busy/busy large)
+    * 所有span的slice
+    * 所有spans区域的内存映射的slice
+    * bitmap的地址
+    * arena状态相关的地址
+    * mcentral的引用
+
+<h3 id="5-mspan"><a href="#5-mspan" class="headerlink" title="5 mspan"></a>5 mspan</h3><ul>
+<li><p>span级别</p>
+<ul>
+<li>一共67个size，而有的对象的字段中有指针，有的没有，每个size又分为scan和noscan</li>
+</ul>
+</li>
+<li><p>span对应分配对象大小</p>
+<ul>
+<li>以class5为例，用于分配<code>[49,64]</code>字节的对象</li>
+</ul>
+</li>
+<li><p>span大小</p>
+<ul>
+<li>拥有一个8K的页，最多可以分配<code>8*1024/64=128</code>个对象</li>
+</ul>
+</li>
+<li><p>浪费率</p>
+<ul>
+<li><p>最小：0</p>
+</li>
+<li><p>最大：<code>1-(49*128)/8192=0.234375</code></p>
+<h4 id="5-1-详解mspan结构体"><a href="#5-1-详解mspan结构体" class="headerlink" title="5.1 详解mspan结构体"></a>5.1 详解mspan结构体</h4><img src="/images/Golang/03_mspan结构体.png" width="80%" height="80%">
+</li>
+</ul>
+</li>
+<li><p>freeindex</p>
+<ul>
+<li>表示从这一个偏移开始寻找free的对象, 0-freeindex之间的对象都分配完了. 如果freeindex等于nelems的话, 那么这个span就全分配完了.</li>
+</ul>
+</li>
+<li><p>allocBits</p>
+<ul>
+<li>标记上一次GC的sweep阶段之后, 哪些slot对应的对象仍然是被使用的.即为0的位置就是空闲的</li>
+<li>如果某个位置n&gt;=freeindex, 且<code>allocBits[n/8]=0</code>的话, 那么这个位置就是未分配的. 否则就是已经分配的.</li>
+</ul>
+</li>
+<li><p>allocCache</p>
+<ul>
+<li>allocBits在freeindex位之后的64个位的数据.每次freeindex都会增加, 而allocCache则会移位</li>
+</ul>
+</li>
+<li><p>第n个对象在内存中的起始位置在 startAddr+n*elemsize, 其中start为这个span开始地址, elemsize为这个span用于分配的对象的大小.</p>
+</li>
+</ul>
+<h4 id="5-2-为什么使用类bitmap的方式标记mspan的分配情况-不用freelist"><a href="#5-2-为什么使用类bitmap的方式标记mspan的分配情况-不用freelist" class="headerlink" title="5.2 为什么使用类bitmap的方式标记mspan的分配情况? 不用freelist?"></a>5.2 为什么使用类bitmap的方式标记mspan的分配情况? 不用freelist?</h4><p>这个golang的gc有关, go在标记时需要记录某个记录是否被使用了. 这样就可以把未被标记的对象释放</p>
+<ul>
+<li>初始分配和sweep span时都需要构造freelist</li>
+<li>freelist内存局部性不好</li>
+</ul>
+<h3 id="6-mcache"><a href="#6-mcache" class="headerlink" title="6 mcache"></a>6 mcache</h3><p>mcache是每个P带有的用于分配小对象的cache, 因为这个对象是per-P的, 所以访问是不需要锁的<br>每个P有67 * 2个mspan作为cache, 一个tiny分配器, 一个多阶的栈内存分配cache.<br><img src="/images/Golang/03_mcache.png" width="80%" height="80%"></p>
+<h3 id="7-mcentral"><a href="#7-mcentral" class="headerlink" title="7 mcentral"></a>7 mcentral</h3><p>每个P都有一个mcache, 每个mcache有67 * 2个mspan作为per-P cache, 分配时先用mcache里的mspan, 如果某个size的mspan用完了, 那么如何获取?<br>这里就涉及到mcentral了, 每个类型的mspan在全局都有一个mcentral作为后备, 用于获取该size类型的mspan.<br>为什么要有mcache? 不直接从heap里分配呢?<br>一个是mcentral作为某个size类型的mspan的缓冲器, 二是分成67*2 个大大减少了多线程冲突.<br><img src="/images/Golang/03_mcentral.png" width="80%" height="80%"></p>
+<h3 id="8-mheap"><a href="#8-mheap" class="headerlink" title="8 mheap"></a>8 mheap</h3><p>mheap全局只有一个, runtime/mheap.go中定义的全局变量. 一些访问是需要加锁的.</p>
+<ul>
+<li>全局的mcentral(67*2个), page到span的映射, 每个word对应的bitmap.</li>
+<li>负责为go runtime从系统申请内存及维护内存位置</li>
+<li>负责维护go runtime目前为go程序分配到的位置</li>
+<li>为mcentral提供mspan的分配</li>
+<li>为&gt;=32KB页直接提供分配</li>
+<li>以类似于伙伴系统的形式维护空闲页</li>
+<li>还有一些内存分配的统计计数</li>
+</ul>
+<h3 id="9-几种特殊的分配器"><a href="#9-几种特殊的分配器" class="headerlink" title="9 几种特殊的分配器"></a>9 几种特殊的分配器</h3><h4 id="9-1-tiny分配器"><a href="#9-1-tiny分配器" class="headerlink" title="9.1 tiny分配器"></a>9.1 tiny分配器</h4><p>对于小于16字节的noscan的对象, 使用mcache上的tiny分配器进行分配. 有以下两个原因</p>
+<ul>
+<li>类似于pointer bumping的方式, 分配对象只需要移动offset就可以, 非常的快</li>
+<li>小对象整合在一起分配, 提高内存利用率</li>
+</ul>
+<h4 id="9-2-fixalloc"><a href="#9-2-fixalloc" class="headerlink" title="9.2 fixalloc"></a>9.2 fixalloc</h4><p>对于管理go heap的一些数据结构, mspan, mcache, mcentral等是从哪里分配的呢?<br>这些对象就只有几种类型, 而且每个对象都是固定的. 且不应该在go gc heap中分配. 这就是fixalloc的作用.</p>
+<p>注意fixalloc分配出去的对象不在go gc heap中, 内存是persistentalloc从系统mmap获取的, 也不由gc释放.</p>
+<h4 id="9-3-stackcache"><a href="#9-3-stackcache" class="headerlink" title="9.3 stackcache"></a>9.3 stackcache</h4><p>在linux amd64中go协程的栈从2KB开始, 最大可到1GB, 当然大部分栈只会是2KB, 调用过深时扩容到4KB, 8KB…如果每次go一个func就重新申请栈, 那么这个内存分配压力也会比较大.<br>仿照go gc heap对象分配的原型, 在per-P的mcache中也有多阶的stack列表的cache</p>
+<ul>
+<li>mcache:mcache中的stackcache管理不同规格class的stack, 相同class的stack被链接到同一个链表中.</li>
+<li>stackpool:全局stack cache, 和mcache中的stackcache结构相同.</li>
+<li>stackLarge: 全局stack cache, 和mcache中的stackcache结构相同. 不同的是stackLarge中stack内存的规格.</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/05/22/Golang-04-GC/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Golang-04-GC</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/05/19/Golang-02-%E8%B0%83%E5%BA%A6%E5%99%A8/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Golang-02-调度器</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-GMP%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B"><span class="nav-text">1 GMP调度模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-GM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%BC%BA%E9%99%B7"><span class="nav-text">1.1 GM调度模型的缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%8Enew%E8%AF%B4%E8%B5%B7"><span class="nav-text">2 从new说起</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-new%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1"><span class="nav-text">2.1 new一个对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90"><span class="nav-text">2.2 逃逸分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E4%B8%87%E7%89%A9%E5%BD%92%E4%BA%8Emallocgc"><span class="nav-text">2.3 万物归于mallocgc</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E8%BF%87%E7%A8%8B"><span class="nav-text">2.4 内存分配过程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Golang-Runtime%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-text">3 Golang Runtime内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-arena-spans-bitmap%E5%8A%9F%E8%83%BD%E6%8F%8F%E8%BF%B0"><span class="nav-text">3.1 arena, spans, bitmap功能描述</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-text">4 几个重要的结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-mspan"><span class="nav-text">5 mspan</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-%E8%AF%A6%E8%A7%A3mspan%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-text">5.1 详解mspan结构体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E7%B1%BBbitmap%E7%9A%84%E6%96%B9%E5%BC%8F%E6%A0%87%E8%AE%B0mspan%E7%9A%84%E5%88%86%E9%85%8D%E6%83%85%E5%86%B5-%E4%B8%8D%E7%94%A8freelist"><span class="nav-text">5.2 为什么使用类bitmap的方式标记mspan的分配情况? 不用freelist?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-mcache"><span class="nav-text">6 mcache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-mcentral"><span class="nav-text">7 mcentral</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-mheap"><span class="nav-text">8 mheap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E5%87%A0%E7%A7%8D%E7%89%B9%E6%AE%8A%E7%9A%84%E5%88%86%E9%85%8D%E5%99%A8"><span class="nav-text">9 几种特殊的分配器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-1-tiny%E5%88%86%E9%85%8D%E5%99%A8"><span class="nav-text">9.1 tiny分配器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-fixalloc"><span class="nav-text">9.2 fixalloc</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-3-stackcache"><span class="nav-text">9.3 stackcache</span></a></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

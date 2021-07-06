@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        编译原理-02-词法与语法分析 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">编译原理-02-词法与语法分析</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-27 13:12:42
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">编译原理</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-词法分析"><a href="#1-词法分析" class="headerlink" title="1 词法分析"></a>1 词法分析</h3><p>将字符序列转换为标记<code>(token)</code>序列的过程，类似人凭借直觉分解文本的过程。例如对于<code>make(chan int)</code>而言，分成几个部分：<code>make</code>、<code>chan</code>、<code>int</code>和括号。</p>
+<h4 id="1-1-lex"><a href="#1-1-lex" class="headerlink" title="1.1 lex"></a>1.1 lex</h4><p><code>lex</code>是用于生成词法分析器的工具，<code>lex</code>生成的代码基于正则匹配将一个文件中的字符分解成<code>Token</code>序列。可以将<code>lex</code>理解为正则匹配的生成器。</p>
+<img src="/images/编译原理/编译原理_02_词法分析.png" width="80%" height="80%">
+
+<h4 id="1-2-go"><a href="#1-2-go" class="headerlink" title="1.2 go"></a>1.2 go</h4><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">src/cmd/compile/internal/syntax/scanner.<span class="keyword">go</span></span><br><span class="line">src/cmd/compile/internal/syntax.scanner</span><br><span class="line">src/cmd/compile/internal/syntax/tokens.<span class="keyword">go</span></span><br><span class="line">cmd/compile/internal/syntax.scanner.next</span><br><span class="line">cmd/compile/internal/syntax.source.nextch</span><br></pre></td></tr></table></figure>
+<p>Go语言的词法解析是通过 <code>scanner.go</code> 文件中的<code>syntax.scanner</code>结构体实现的，这个结构体会持有当前扫描的数据源文件、启用的模式和当前被扫描到的<code>Token</code>。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> scanner <span class="keyword">struct</span> &#123;</span><br><span class="line">    source</span><br><span class="line">    mode   <span class="keyword">uint</span></span><br><span class="line">    nlsemi <span class="keyword">bool</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// current token, valid after calling next()</span></span><br><span class="line">    line, col <span class="keyword">uint</span></span><br><span class="line">    blank     <span class="keyword">bool</span> <span class="comment">// line is blank up to col</span></span><br><span class="line">    tok       token</span><br><span class="line">    lit       <span class="keyword">string</span>   <span class="comment">// valid if tok is _Name, _Literal, or _Semi (&quot;semicolon&quot;, &quot;newline&quot;, or &quot;EOF&quot;); may be malformed if bad is true</span></span><br><span class="line">    bad       <span class="keyword">bool</span>     <span class="comment">// valid if tok is _Literal, true if a syntax error occurred, lit may be malformed</span></span><br><span class="line">    kind      LitKind  <span class="comment">// valid if tok is _Literal</span></span><br><span class="line">    op        Operator <span class="comment">// valid if tok is _Operator, _AssignOp, or _IncOp</span></span><br><span class="line">    prec      <span class="keyword">int</span>      <span class="comment">// valid if tok is _Operator, _AssignOp, or _IncOp</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>tokens.go</code> 文件中定义了 Go 语言中支持的全部 <code>Token</code> 类型，所有的 <code>token</code> 类型都是正整数。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    _    token = <span class="literal">iota</span></span><br><span class="line">    _EOF       <span class="comment">// EOF</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// operators and operations</span></span><br><span class="line">    _Operator <span class="comment">// op</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// delimiters</span></span><br><span class="line">    _Lparen    <span class="comment">// (</span></span><br><span class="line">    _Lbrack    <span class="comment">// [</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// keywords</span></span><br><span class="line">    _Break       <span class="comment">// break</span></span><br><span class="line">    ...</span><br><span class="line">    _Type        <span class="comment">// type</span></span><br><span class="line">    _Var         <span class="comment">// var</span></span><br><span class="line"></span><br><span class="line">    tokenCount <span class="comment">//</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>从 Go 语言中定义的<code>Token</code>类型，我们可以将语言中的元素分成几个不同的类别，分别是名称<code>name</code>和字面量<code>literal</code>、操作符<code>operators</code>、分隔符<code>delimiters</code>和关键字<code>keywords</code></p>
+<p>词法分析主要是由 <code>syntax.scanner</code> 这个结构体中的 <code>syntax.scanner.next</code> 方法驱动，这个250行函数的主体是一个 <code>switch/case</code> 结构。</p>
+<p><code>syntax.scanner</code> 每次都会通过 <code>syntax.source.nextch</code> 函数获取文件中最近的未被解析的字符，然后根据当前字符的不同执行不同的 <code>case</code>。</p>
+<h3 id="2-语法分析"><a href="#2-语法分析" class="headerlink" title="2 语法分析"></a>2 语法分析</h3><p>根据某种特定的形式文法<code>（Grammar）</code>对 <code>Token</code> 序列构成的输入文本进行分析并确定其语法结构的过程。</p>
+<h4 id="2-1-文法"><a href="#2-1-文法" class="headerlink" title="2.1 文法"></a>2.1 文法</h4><p><code>上下文无关文法</code>是用来形式化、精确描述某种编程语言的工具，我们能够通过文法定义一种语言的语法，它主要包含一系列用于转换字符串的生产规则<code>（Production rule）</code>。上下文无关文法中的每一个生产规则都会将规则左侧的非终结符转换成右侧的字符串。</p>
+<p>终结符是文法中无法再被展开的符号，而非终结符与之相反，还可以通过生产规则进行展开。</p>
+<p>文法组成</p>
+<ul>
+<li>𝑁 有限个非终结符的集合；</li>
+<li>Σ 有限个终结符的集合；</li>
+<li>𝑃 有限个生产规则的集合；</li>
+<li>𝑆 非终结符集合中唯一的开始符号；</li>
+</ul>
+<p>从 <code>src/cmd/compile/internal/syntax/parser.go</code> 文件中摘抄一些 Go 语言文法的生产规则</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SourceFile = PackageClause <span class="string">&quot;;&quot;</span> &#123; ImportDecl <span class="string">&quot;;&quot;</span> &#125; &#123; TopLevelDecl <span class="string">&quot;;&quot;</span> &#125; .</span><br><span class="line">PackageClause  = <span class="string">&quot;package&quot;</span> PackageName .</span><br><span class="line">PackageName    = identifier .</span><br><span class="line"></span><br><span class="line">ImportDecl       = <span class="string">&quot;import&quot;</span> ( ImportSpec | <span class="string">&quot;(&quot;</span> &#123; ImportSpec <span class="string">&quot;;&quot;</span> &#125; <span class="string">&quot;)&quot;</span> ) .</span><br><span class="line">ImportSpec       = [ <span class="string">&quot;.&quot;</span> | PackageName ] ImportPath .</span><br><span class="line">ImportPath       = string_lit .</span><br><span class="line"></span><br><span class="line">TopLevelDecl  = Declaration | FunctionDecl | MethodDecl .</span><br><span class="line">Declaration   = ConstDecl | TypeDecl | VarDecl .</span><br></pre></td></tr></table></figure>
+<p>因为每个 Go 源代码文件最终都会被解析成一个独立的抽象语法树，所以语法树最顶层的结构或者开始符号都是 SourceFile；</p>
+<p>每一个 SourceFile 在编译器中都对应一个 cmd/compile/internal/syntax.File 结构体</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> File <span class="keyword">struct</span> &#123;</span><br><span class="line">    Pragma   Pragma</span><br><span class="line">    PkgName  *Name</span><br><span class="line">    DeclList []Decl</span><br><span class="line">    Lines    <span class="keyword">uint</span></span><br><span class="line">    node</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中顶层声明有五大类型，分别是常量、类型、变量、函数和方法</p>
+<blockquote>
+<p>常量、类型和变量的定义</p>
+</blockquote>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ConstDecl = <span class="string">&quot;const&quot;</span> ( ConstSpec | <span class="string">&quot;(&quot;</span> &#123; ConstSpec <span class="string">&quot;;&quot;</span> &#125; <span class="string">&quot;)&quot;</span> ) .</span><br><span class="line">ConstSpec = IdentifierList [ [ Type ] <span class="string">&quot;=&quot;</span> ExpressionList ] .</span><br><span class="line"></span><br><span class="line">TypeDecl  = <span class="string">&quot;type&quot;</span> ( TypeSpec | <span class="string">&quot;(&quot;</span> &#123; TypeSpec <span class="string">&quot;;&quot;</span> &#125; <span class="string">&quot;)&quot;</span> ) .</span><br><span class="line">TypeSpec  = AliasDecl | TypeDef .</span><br><span class="line">AliasDecl = identifier <span class="string">&quot;=&quot;</span> Type .</span><br><span class="line">TypeDef   = identifier Type .</span><br><span class="line"></span><br><span class="line">VarDecl = <span class="string">&quot;var&quot;</span> ( VarSpec | <span class="string">&quot;(&quot;</span> &#123; VarSpec <span class="string">&quot;;&quot;</span> &#125; <span class="string">&quot;)&quot;</span> ) .</span><br><span class="line">VarSpec = IdentifierList ( Type [ <span class="string">&quot;=&quot;</span> ExpressionList ] | <span class="string">&quot;=&quot;</span> ExpressionList ) .</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>函数和方法的定义</p>
+</blockquote>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">FunctionDecl = <span class="string">&quot;func&quot;</span> FunctionName Signature [ FunctionBody ] .</span><br><span class="line">FunctionName = identifier .</span><br><span class="line">FunctionBody = Block .</span><br><span class="line"></span><br><span class="line">MethodDecl = <span class="string">&quot;func&quot;</span> Receiver MethodName Signature [ FunctionBody ] .</span><br><span class="line">Receiver   = Parameters .</span><br><span class="line"></span><br><span class="line">Block = <span class="string">&quot;&#123;&quot;</span> StatementList <span class="string">&quot;&#125;&quot;</span> .</span><br><span class="line">StatementList = &#123; Statement <span class="string">&quot;;&quot;</span> &#125; .</span><br><span class="line"></span><br><span class="line">Statement =</span><br><span class="line">    Declaration | LabeledStmt | SimpleStmt |</span><br><span class="line">    GoStmt | ReturnStmt | BreakStmt | ContinueStmt | GotoStmt |</span><br><span class="line">    FallthroughStmt | Block | IfStmt | SwitchStmt | SelectStmt | ForStmt |</span><br><span class="line">    DeferStmt .</span><br><span class="line"></span><br><span class="line">SimpleStmt = EmptyStmt | ExpressionStmt | SendStmt | IncDecStmt | Assignment | ShortVarDecl .</span><br></pre></td></tr></table></figure>
+<p>Statement总共可以转换成15种不同的语法结构，这些不同的语法结构共同定义了 Go 语言中能够使用的语法结构和表达式</p>
+<h4 id="2-2-分析方法"><a href="#2-2-分析方法" class="headerlink" title="2.2 分析方法"></a>2.2 分析方法</h4><ul>
+<li><p>自顶向下分析：对于任意一个输入流，根据当前的输入符号，确定一个生产规则，使用生产规则右侧的符号替代相应的非终结符向下推导</p>
+</li>
+<li><p>自底向上分析：每次都尝试重写最右侧的多个符号，这其实是说解析器会从最简单的符号进行推导，在解析的最后合并成开始符号</p>
+</li>
+<li><p>Lookahead：在不同生产规则发生冲突时，当前解析器需要通过预读一些 <code>Token</code> 判断当前应该用什么生产规则对输入流进行展开或者归约；例如在<code>LALR(1)</code>文法中，需要预读一个<code>Token</code>保证出现冲突的生产规则能够被正确处理。</p>
+</li>
+</ul>
+<h4 id="2-3-go"><a href="#2-3-go" class="headerlink" title="2.3 go"></a>2.3 go</h4><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cmd/compile/internal/gc.parseFiles</span><br><span class="line">cmd/compile/internal/syntax.Parse</span><br><span class="line">cmd/compile/internal/syntax.parser</span><br><span class="line">cmd/compile/internal/syntax.parser.fileOrNil</span><br><span class="line">cmd/compile/internal/syntax.parser.got</span><br><span class="line">cmd/compile/internal/syntax.parser.name</span><br><span class="line">cmd/compile/internal/syntax.File</span><br></pre></td></tr></table></figure>
+<p>编译器的主函数，该函数调用的<code>gc.parseFiles</code>会使用多个<code>Goroutine</code>来解析源文件，解析的过程会调用<code>syntax.Parse</code>，该函数初始化了一个新的<code>syntax.parser</code>结构体并通过<code>syntax.parser.fileOrNil</code>方法开启对当前文件的词法和语法解析</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Parse</span><span class="params">(base *PosBase, src io.Reader, errh ErrorHandler, pragh PragmaHandler, mode Mode)</span> <span class="params">(_ *File, first error)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> p parser</span><br><span class="line">    p.init(base, src, errh, pragh, mode)</span><br><span class="line">    p.next()</span><br><span class="line">    <span class="keyword">return</span> p.fileOrNil(), p.first</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先解析文件开头的<code>package</code>定义</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SourceFile = PackageClause &quot;;&quot; &#123; ImportDecl &quot;;&quot; &#125; &#123; TopLevelDecl &quot;;&quot; &#125; .</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *parser)</span> <span class="title">fileOrNil</span><span class="params">()</span> *<span class="title">File</span></span> &#123;</span><br><span class="line">    f := <span class="built_in">new</span>(File)</span><br><span class="line">    f.pos = p.pos()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> !p.got(_Package) &#123;</span><br><span class="line">        p.syntaxError(<span class="string">&quot;package statement must be first&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    f.PkgName = p.name()</span><br><span class="line">    p.want(_Semi)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其次解析可选的import声明</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> p.got(_Import) &#123;</span><br><span class="line">        f.DeclList = p.appendGroup(f.DeclList, p.importDecl)</span><br><span class="line">        p.want(_Semi)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这之后会根据编译器获取的关键字进入 switch 的不同分支</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> p.tok != _EOF &#123;</span><br><span class="line">        <span class="keyword">switch</span> p.tok &#123;</span><br><span class="line">        <span class="keyword">case</span> _Const:</span><br><span class="line">            p.next()</span><br><span class="line">            f.DeclList = p.appendGroup(f.DeclList, p.constDecl)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> _Type:</span><br><span class="line">            p.next()</span><br><span class="line">            f.DeclList = p.appendGroup(f.DeclList, p.typeDecl)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> _Var:</span><br><span class="line">            p.next()</span><br><span class="line">            f.DeclList = p.appendGroup(f.DeclList, p.varDecl)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> _Func:</span><br><span class="line">            p.next()</span><br><span class="line">            <span class="keyword">if</span> d := p.funcDeclOrNil(); d != <span class="literal">nil</span> &#123;</span><br><span class="line">                f.DeclList = <span class="built_in">append</span>(f.DeclList, d)</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    f.Lines = p.source.line</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> f</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/images/编译原理/编译原理_02_go解析器方法.png" width="80%" height="80%">
+
+<h5 id="2-3-1-辅助方法"><a href="#2-3-1-辅助方法" class="headerlink" title="2.3.1 辅助方法"></a>2.3.1 辅助方法</h5><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *parser)</span> <span class="title">got</span><span class="params">(tok token)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> p.tok == tok &#123;</span><br><span class="line">        p.next()</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *parser)</span> <span class="title">want</span><span class="params">(tok token)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> !p.got(tok) &#123;</span><br><span class="line">        p.syntaxError(<span class="string">&quot;expecting &quot;</span> + tokstring(tok))</span><br><span class="line">        p.advance()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *parser)</span> <span class="title">appendGroup</span><span class="params">(list []Decl, f <span class="keyword">func</span>(*Group)</span> <span class="title">Decl</span>) []<span class="title">Decl</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> p.tok == _Lparen &#123;</span><br><span class="line">        g := <span class="built_in">new</span>(Group)</span><br><span class="line">        p.list(_Lparen, _Semi, _Rparen, <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">            list = <span class="built_in">append</span>(list, f(g))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        list = <span class="built_in">append</span>(list, f(<span class="literal">nil</span>))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> list</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3-2-节点"><a href="#2-3-2-节点" class="headerlink" title="2.3.2 节点"></a>2.3.2 节点</h5><ul>
+<li><p>根节点：<code>cmd/compile/internal/syntax.File</code></p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> File <span class="keyword">struct</span> &#123;</span><br><span class="line">    Pragma   Pragma</span><br><span class="line">    PkgName  *Name</span><br><span class="line">    DeclList []Decl</span><br><span class="line">    Lines    <span class="keyword">uint</span></span><br><span class="line">    node</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>函数节点</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">    Decl <span class="keyword">interface</span> &#123;</span><br><span class="line">        Node</span><br><span class="line">        aDecl()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    FuncDecl <span class="keyword">struct</span> &#123;</span><br><span class="line">        Attr   <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">bool</span></span><br><span class="line">        Recv   *Field</span><br><span class="line">        Name   *Name</span><br><span class="line">        Type   *FuncType</span><br><span class="line">        Body   *BlockStmt</span><br><span class="line">        Pragma Pragma</span><br><span class="line">        decl</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/27/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86-01-%E6%A6%82%E8%BF%B0/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">编译原理-01-概述</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/26/Kafka-03-%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Kafka-03-架构原理</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-text">1 词法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-lex"><span class="nav-text">1.1 lex</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-go"><span class="nav-text">1.2 go</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-text">2 语法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E6%96%87%E6%B3%95"><span class="nav-text">2.1 文法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="nav-text">2.2 分析方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-go"><span class="nav-text">2.3 go</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-1-%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95"><span class="nav-text">2.3.1 辅助方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-2-%E8%8A%82%E7%82%B9"><span class="nav-text">2.3.2 节点</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

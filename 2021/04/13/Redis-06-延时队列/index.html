@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Redis-06-延时队列 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Redis-06-延时队列</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-13 19:47:29
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Redis/">Redis</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/">延迟队列</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-背景"><a href="#1-背景" class="headerlink" title="1 背景"></a>1 背景</h3><ul>
+<li>长时间没有支付的订单，如何关闭</li>
+<li>如何定期检查处于退款状态的订单是否已经退款成功</li>
+<li>基于某起始时间，需要延迟一定时间执行的逻辑</li>
+</ul>
+<h3 id="2-解决方案"><a href="#2-解决方案" class="headerlink" title="2 解决方案"></a>2 解决方案</h3><ul>
+<li>定时扫表：基于定义的时间间隔定时扫表，浪费资源。数据量较大的时候，可能造成任务执行延迟</li>
+<li>改造专业消息队列：复杂</li>
+</ul>
+<h3 id="3-设计目标"><a href="#3-设计目标" class="headerlink" title="3 设计目标"></a>3 设计目标</h3><ul>
+<li>消息传输可靠性：进入延迟队列的消息，保证至少消费一次</li>
+<li>实时性：允许一定时间误差</li>
+<li>支持消息删除：业务使用方，可以随时删除指定消息</li>
+</ul>
+<h3 id="4-整体架构"><a href="#4-整体架构" class="headerlink" title="4 整体架构"></a>4 整体架构</h3><p><img src="/images/%E5%BB%B6%E6%97%B6%E9%98%9F%E5%88%97.png" alt="延时队列"></p>
+<ul>
+<li>Job Pool：用来存放所有Job的元信息</li>
+<li>Delay Queue：是一组以时间为维度的有序队列，用来存放所有需要延迟的／已经被reserve的Job（这里只存放Job Id）</li>
+<li>Timer：负责实时扫描各个Bucket，并将delay时间大于等于当前时间的Job放入到对应的Worker Queue</li>
+<li>Worker Queue：消费Ready状态的Job</li>
+</ul>
+<h3 id="5-代码分析"><a href="#5-代码分析" class="headerlink" title="5 代码分析"></a>5 代码分析</h3><ul>
+<li>定义delay-queue元信息（hash）</li>
+<li>定义delay-queue (zset)</li>
+<li>分发delay-task到worker-queue (list)<ul>
+<li>避免多实例部署后重复被分发，加锁 (setnx)</li>
+<li>status=0或者status&lt;&gt;-1且需要重新推送，则重新推送worker-queue</li>
+</ul>
+</li>
+<li>消费task<ul>
+<li>消费成功：删除delay-queue元素，删除元信息</li>
+<li>消费失败：继续延迟，更新元信息<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br></pre></td><td class="code"><pre><span class="line">//1.定义worker</span><br><span class="line">(defmacro defdelayworker [worker-name delay-q period thread-num callback]</span><br><span class="line">  `(let [delay-q#  (str ~delay-q)</span><br><span class="line">         pool#     (Executors/newScheduledThreadPool (+ 1 ~thread-num))</span><br><span class="line">         worker-q# (str delay-q# &quot;-worker&quot;)</span><br><span class="line">         rand#     (Random.)</span><br><span class="line">         period-ms# (period-ms ~period)]</span><br><span class="line">     (defstate ~worker-name :start (do</span><br><span class="line">                                     (register-delay-q delay-q# ~period ~(name worker-name))</span><br><span class="line">                                     ;master线程：用来分发延迟任务</span><br><span class="line">                                     (.scheduleWithFixedDelay pool#</span><br><span class="line">                                                           #(delivery-delay-task delay-q# worker-q# period-ms#)</span><br><span class="line">                                                           #_(proxy [Runnable] []</span><br><span class="line">                                                             (~&#x27;run [] (delivery-delay-task delay-q# worker-q#)))</span><br><span class="line">                                                           (.nextInt rand# 1000)</span><br><span class="line">                                                           1000 TimeUnit/MILLISECONDS)</span><br><span class="line">                                     ;worker线程：用来处理延迟任务</span><br><span class="line">                                     (doseq [i# (range ~thread-num)]</span><br><span class="line">                                       (.scheduleWithFixedDelay pool#</span><br><span class="line">                                                             #(execute-delay-task delay-q# worker-q# period-ms# ~callback)</span><br><span class="line">                                                             (.nextInt rand# 1000)</span><br><span class="line">                                                             period-ms# TimeUnit/MILLISECONDS)))</span><br><span class="line">               :stop (.shutdown pool#))))</span><br><span class="line"></span><br><span class="line">//2.定义delay-queue元信息</span><br><span class="line">(defn register-delay-q</span><br><span class="line">  &quot;注册队列&quot;</span><br><span class="line">  [q-name period worker-name]</span><br><span class="line">  (let [app-name   (bootstrap/get-app-name)</span><br><span class="line">        q-app-name (-&gt; (hget all-delay-q-set q-name)</span><br><span class="line">                       (j/decode)</span><br><span class="line">                       (get &quot;app&quot;))]</span><br><span class="line">    (if (and (not (nil? q-app-name)) (not= app-name q-app-name))</span><br><span class="line">      (u/bad-request (str &quot;队列[&quot; q-name &quot;]已被微服务[&quot; q-app-name &quot;]使用！&quot;)))</span><br><span class="line">    (hset all-delay-q-set q-name (j/encode &#123;:app    app-name</span><br><span class="line">                                            :period period</span><br><span class="line">                                            :worker worker-name&#125;))))</span><br><span class="line"></span><br><span class="line">//3.获取</span><br><span class="line">(defn get-delay-task</span><br><span class="line">  &quot;获取延时队列中的任务id，返回任务id的集合</span><br><span class="line">  默认只查询当前时间到期的延迟任务，配合运维支持传入某个时间查询该时间之前的任务&quot;</span><br><span class="line">  ([^String queue-name] (get-delay-task queue-name (double (System/currentTimeMillis))))</span><br><span class="line">  ([^String queue-name ^Double score]</span><br><span class="line">   (with-redis [redis]</span><br><span class="line">               (.zrangeByScore redis (str queue-name) 0.0 (double score)))))</span><br><span class="line"></span><br><span class="line">//4.分发</span><br><span class="line">(defn delivery-delay-task [delay-q worker-q period-ms]</span><br><span class="line">  &quot;master线程：分发到期的延迟任务到worker队列&quot;</span><br><span class="line">  (try</span><br><span class="line">    (let [task-uuid-set (get-delay-task delay-q)]</span><br><span class="line">      (doseq [task-uuid task-uuid-set</span><br><span class="line">              :let [lock-key    (str &quot;delivery-&quot; task-uuid)</span><br><span class="line">                    lock-result (set-lock lock-key &quot;delivery-task&quot; 60)]]</span><br><span class="line">        (if (= lock-result &quot;OK&quot;)</span><br><span class="line">          (try</span><br><span class="line">            (let [task-info (-&gt; (get-kv task-uuid) (j/decode))</span><br><span class="line">                  status    (get task-info &quot;status&quot;)</span><br><span class="line">                  delivery-ts   (or (get task-info &quot;delivery-ts&quot;)  (u/unix-now))</span><br><span class="line">                  timeout   (or (get task-info &quot;timeout&quot;) 600)</span><br><span class="line">                  ;计算任务是否过期：已经过了任务应该被调度的时间&amp;&amp;超过的时间&gt;timeout</span><br><span class="line">                  re-publish? (pos? (- (u/unix-now) delivery-ts (/ period-ms 1000) timeout))]</span><br><span class="line">              ;ready状态的任务，需推送到worker队列，然后等待ack（unack的不能重复推送）</span><br><span class="line">              ;如果worker线程执行过程中，进程被kill或重启，可能会导致ack发送不了从而任务就不会再执行了，为防止该情况的发生，需加上超时判断（unack的任务，如超时会继续往worker-q中推送）</span><br><span class="line">              ;status=1只可能有3种情况，1（正常）：未到调度周期；2（正常）：任务被推送到woker-q后未执行完成；3（不正常）：执行任务时出现异常，比如redis 连接或读取超时</span><br><span class="line">              (if (or (= 0 status) (and (not= -1 status) re-publish?))</span><br><span class="line">                (do</span><br><span class="line">                  (rpush worker-q task-uuid)</span><br><span class="line">                  (set-kv task-uuid (-&gt; (assoc task-info &quot;status&quot; 1)</span><br><span class="line">                                        ;防止worker开始执行前，由于master执行频率高，误将任务重复推到woker队列</span><br><span class="line">                                        (assoc &quot;delivery-time&quot; (u/time-str))</span><br><span class="line">                                        (assoc &quot;delivery-ts&quot; (u/unix-now))</span><br><span class="line">                                        (j/encode)))</span><br><span class="line">                  (log/info &quot;delivery-delay-task[&quot; task-uuid &quot;],exec-num=&quot; (get task-info &quot;exec-num&quot;)))))</span><br><span class="line">            (catch Exception e</span><br><span class="line">              (log/info &quot;delivery-delay-task ex:&quot; e))</span><br><span class="line">            (finally</span><br><span class="line">              (del lock-key)))</span><br><span class="line">          (log/info &quot;到期的任务正在被推到处理队列,uuid[&quot; task-uuid &quot;]&quot;)))</span><br><span class="line">      true)</span><br><span class="line">    (catch Exception e</span><br><span class="line">      (log/error &quot;delivery-delay-task exception:&quot; e))))</span><br><span class="line"></span><br><span class="line">//5. 消费</span><br><span class="line">(defn execute-delay-task</span><br><span class="line">  &quot;执行待处理队列中的任务[task-fn]</span><br><span class="line">  task-fn:执行具体任务，参数为：发布(publish-delay-task)到队列里中的payload值</span><br><span class="line">  task-fn：执行成功返回true（需要删除任务）,失败返回false</span><br><span class="line">  true:任务执行成功&quot;</span><br><span class="line">  [delay-q worker-q period-ms task-fn]</span><br><span class="line">  (try</span><br><span class="line">    (loop [task-uuid (lpop worker-q)]</span><br><span class="line">      (if (nil? task-uuid)</span><br><span class="line">        true</span><br><span class="line">        (let [task-info  (-&gt; (get-kv task-uuid) (j/decode))</span><br><span class="line">              _ (log/info &quot;execute-delay-task[&quot; task-uuid &quot;],exec-num=&quot; (get task-info &quot;exec-num&quot;))</span><br><span class="line">              payload    (get task-info &quot;payload&quot;)</span><br><span class="line">              ts         (u/unix-now)</span><br><span class="line">              start-time (u/time-str)</span><br><span class="line">              [flag result] (if (nil? payload)</span><br><span class="line">                              [true true]</span><br><span class="line">                              (try</span><br><span class="line">                                [true (task-fn payload)]</span><br><span class="line">                                (catch Exception e</span><br><span class="line">                                  ;异常后不在重复执行</span><br><span class="line">                                  (log/error &quot;execute callback ex:&quot; e)</span><br><span class="line">                                  [false (.getMessage e)])))</span><br><span class="line">              end-time   (u/time-str)</span><br><span class="line">              new-task   (cond</span><br><span class="line">                           (and (true? flag) (true? result)) nil</span><br><span class="line">                           :else (let [[status msg] (if (true? flag)</span><br><span class="line">                                                      [0 &quot;ok&quot;]</span><br><span class="line">                                                      [-1 result])</span><br><span class="line">                                       ;发送ack，使master线程可以重新推送</span><br><span class="line">                                       task (-&gt; task-info</span><br><span class="line">                                                (update &quot;exec-num&quot; inc)</span><br><span class="line">                                                (assoc &quot;exec-start-time&quot; start-time)</span><br><span class="line">                                                (assoc &quot;exec-end-time&quot; end-time)</span><br><span class="line">                                                (assoc &quot;exec-ts&quot; ts)</span><br><span class="line">                                                (assoc &quot;status&quot; status)</span><br><span class="line">                                                (assoc &quot;msg&quot; msg))]</span><br><span class="line">                                   ;回调函数出现异常 或 返回false或nil，则消息重新入队，否则将函数的返回值作为payload重新入队</span><br><span class="line">                                   (if (or (false? flag) (false? result) (nil? result))</span><br><span class="line">                                     task</span><br><span class="line">                                     (assoc task &quot;payload&quot; result))))]</span><br><span class="line">          (if (true? result)</span><br><span class="line">            (del-delay-task delay-q task-uuid)</span><br><span class="line">            (do</span><br><span class="line">              (zincrby delay-q task-uuid (double period-ms))</span><br><span class="line">              (set-kv task-uuid (j/encode new-task))))</span><br><span class="line">          (recur (lpop worker-q)))))</span><br><span class="line">    (catch Exception e</span><br><span class="line">      (log/error &quot;execute-delay-task exception:&quot; e))))</span><br><span class="line"></span><br><span class="line">//6. 推送任务</span><br><span class="line">(defn publish-delay-task</span><br><span class="line">  &quot;往延迟队列中添加任务</span><br><span class="line">  payload：任意类型，具体的任务，比如单号或固资号等</span><br><span class="line">  delay-second：整数，单位（S），任务延迟多少秒后具备执行条件</span><br><span class="line">  timeout：任务执行超时时间，单位（S）（非必传，默认600秒）</span><br><span class="line">  延时队列中，存储task对应的uuid,具体task的内容存储在以uuid为key的value中</span><br><span class="line">  成功：返回任务的uuid</span><br><span class="line">  失败：返回nil&quot;</span><br><span class="line">  ([^String delay-q payload ^Integer delay-second] (publish-delay-task delay-q payload delay-second 600))</span><br><span class="line">  ([^String delay-q payload ^Integer delay-second ^Integer timeout]</span><br><span class="line">   (try</span><br><span class="line">     (with-redis [redis]</span><br><span class="line">                 (let [;每个任务对应的uuid</span><br><span class="line">                       task-uuid (-&gt;&gt; (guid/generate-guid) (str delay-q &quot;-&quot;))</span><br><span class="line">                       score     (-&gt; (Integer. delay-second)</span><br><span class="line">                                     (* 1000.0)</span><br><span class="line">                                     (+ (System/currentTimeMillis)))]</span><br><span class="line">                   (.zadd redis (str delay-q) score task-uuid)</span><br><span class="line">                   ;方便扩展：将任务的payload与某个uuid关联</span><br><span class="line">                   (.set redis task-uuid (j/encode &#123;:payload         payload</span><br><span class="line">                                                    :exec-num        0</span><br><span class="line">                                                    :publish-time    (u/time-str)</span><br><span class="line">                                                    :delivery-time   &quot;&quot;</span><br><span class="line">                                                    :exec-start-time &quot;&quot;</span><br><span class="line">                                                    :exec-end-time   &quot;&quot;</span><br><span class="line">                                                    :retry           0</span><br><span class="line">                                                    :timeout         (Integer. timeout)</span><br><span class="line">                                                    ;status 0:ready可以推送到worker队列,1:等待ack;-1:执行失败</span><br><span class="line">                                                    :status          0</span><br><span class="line">                                                    :msg             &quot;&quot;&#125;))</span><br><span class="line">                   task-uuid))</span><br><span class="line">     (catch Exception e</span><br><span class="line">       (log/info &quot;publish-delay-task ex:&quot; e)</span><br><span class="line">       nil))))</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/14/Redis-07-%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E3%80%81%E5%87%BB%E7%A9%BF%E3%80%81%E7%A9%BF%E9%80%8F/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-07-缓存雪崩、击穿、穿透</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/12/Redis-05-%E5%BC%82%E6%AD%A5%E9%98%9F%E5%88%97/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-05-异步队列</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%83%8C%E6%99%AF"><span class="nav-text">1 背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">2 解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="nav-text">3 设计目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-text">4 整体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-text">5 代码分析</span></a></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>

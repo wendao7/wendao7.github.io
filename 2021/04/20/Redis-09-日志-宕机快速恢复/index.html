@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <title>
+        Redis-09-日志_宕机快速恢复 |
+        
+        win的博客
+    </title>
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true},"style":{"primary_color":"#0066CC","avatar":"/images/avatar.png","favicon":"/images/logo.svg","img_position":"left","left_side_width":"260px","content_max_width":"900px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"小小技术, 大大无聊."}},"local_search":{"enable":false,"trigger":"auto","unescape":false,"preload":false},"version":"3.0.4"};
+    KEEP.language = "search: Search...\nprev: Prev\nnext: Next\nprev_posts: Prev posts\nnext_posts: Next posts\npage: Page %d\nrecent_posts: Recent Posts\nshare: Share\npowered_by: \"Powered by %s\"\ntheme: Theme\nrss_feed: RSS Feed\ncategory: Category\ncategories: Categories\ntag: Tag\ntags: Tags\ntagcloud: Tag Cloud\ncomment: Comment\nhome: Home\narchive: Archive\narchives: Archives\nabout: About\nsite_uv: Visitor Count\nsite_pv: Totalview\nlinks: Links\nlink: Link\ntop: TOP\nread_more: Read more\nwordcount: Words\nmin2read: Mins\nchangelog: Changelog\ncopyright:\n  author: Post author\n  title: Post title\n  link: Post link\n  create_time: Create time\n  license_title: Copyright Notice\n  license_content: \"All articles in this blog are licensed under %s unless stating additionally.\"\nago:\n  second: \"%s seconds ago\"\n  minute: \"%s minutes ago\"\n  hour: \"%s hours ago\"\n  day: \"%s days age\"\n  week: \"%s weeks age\"\n  month: \"%s months age\"\n  year: \"%s years age\"\n";
+  </script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+<div class="page-container">
+
+    
+
+    <header class="page-header">
+        <div class="header-progress"></div>
+    </header>
+
+    <main class="page-main">
+
+        <div class="page-main-content">
+
+            <div class="page-main-content-top">
+                <header class="header-wrapper">
+
+    <div class="header-content">
+        <a class="logo-title" href="/">
+            win的博客
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/links"
+                    >
+                        LINKS
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">LINKS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+            </div>
+
+            <div class="page-main-content-middle">
+
+                <main class="main-content normal-code-theme">
+
+                    
+                        <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Redis-09-日志_宕机快速恢复</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span>win</span>
+                        <span class="level">Lv8</span>
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-calendar"></i> 2021-04-20 11:36:33
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Redis/">Redis</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%AE%95%E6%9C%BA%E6%81%A2%E5%A4%8D/">宕机恢复</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="1-RDB内存快照-让宕机快速恢复"><a href="#1-RDB内存快照-让宕机快速恢复" class="headerlink" title="1 RDB内存快照 让宕机快速恢复"></a>1 RDB内存快照 让宕机快速恢复</h3><p>在Redis执行<code>写</code>指令过程中，内存数据会一直变化。内存快照指的就是Redis内存中的数据在某一刻的状态数据。</p>
+<p>把某一刻的数据以文件的形式拍下来，写到磁盘上。这个快照文件叫做RDB文件，RDB就是Redis DataBase的缩写。</p>
+<p>通过定时执行RDB内存快照，这样就不必每次执行「写」指令都写磁盘，只需要在执行内存快照的时候写磁盘。做数据恢复时，直接将RDB文件读入内存完成恢复。</p>
+<img src="/images/Redis/09_RDB内存快照.png" width="80%" height="80%">
+
+<h4 id="1-1-快照范围"><a href="#1-1-快照范围" class="headerlink" title="1.1 快照范围"></a>1.1 快照范围</h4><ul>
+<li>save：主线程执行，会阻塞</li>
+<li>bgsave：调用 glibc 的函数fork产生一个子进程用于写入 RDB 文件，快照持久化完全交给子进程来处理，父进程继续处理客户端请求，这是生成 RDB 文件的默认配置。</li>
+</ul>
+<p>Redis 使用操作系统的多进程写时复制技术 COW(Copy On Write) 来实现快照持久化。bgsave 子进程可以共享主线程的所有内存数据，读取主线程的数据并写入到 RDB 文件。</p>
+<p>当主线程执行写指令修改数据的时候，这个数据就会复制一份副本， bgsave 子进程读取这个副本数据写到 RDB 文件，所以主线程就可以直接修改原来的数据</p>
+<img src="/images/Redis/09_写时复制技术.png" width="80%" height="80%">
+
+<h4 id="1-2-频率"><a href="#1-2-频率" class="headerlink" title="1.2 频率"></a>1.2 频率</h4><p>频繁生成 RDB 文件写入磁盘，磁盘压力过大。会出现上一个 RDB 还未执行完，下一个又开始生成，陷入死循环。</p>
+<p>fork 出 bgsave 子进程会阻塞主线程，主线程的内存越大，阻塞时间越长</p>
+<h4 id="1-3-优缺点"><a href="#1-3-优缺点" class="headerlink" title="1.3 优缺点"></a>1.3 优缺点</h4><ul>
+<li>RDB 采用二进制 + 数据压缩的方式写磁盘，文件体积小，数据恢复速度快</li>
+<li>频率过低宕机丢失的数据比较多，太高会产生额外开销</li>
+</ul>
+<h3 id="2-AOF写后日志-避免宕机数据丢失-Append-Only-File"><a href="#2-AOF写后日志-避免宕机数据丢失-Append-Only-File" class="headerlink" title="2 AOF写后日志 避免宕机数据丢失 Append Only File"></a>2 AOF写后日志 避免宕机数据丢失 Append Only File</h3><p>AOF 日志存储的是 Redis 服务器的顺序指令序列，AOF 日志只记录对内存进行修改的指令记录。</p>
+<p>可以通过对一个空的 Redis 实例顺序执行所有的指令，也就是「重放」，来恢复 Redis 当前实例的内存数据结构的状态。</p>
+<h4 id="2-1-写后日志"><a href="#2-1-写后日志" class="headerlink" title="2.1 写后日志"></a>2.1 写后日志</h4><p>写后日志避免了额外的检查开销，不需要对执行的命令进行语法检查；此外写后才记录日志，不会阻塞当前的写指令执行。<br><img src="/images/写后日志.png" width="60%" height="60%"></p>
+<h4 id="2-2-AOF日志格式"><a href="#2-2-AOF日志格式" class="headerlink" title="2.2 AOF日志格式"></a>2.2 AOF日志格式</h4><img src="/images/Redis/redis_09_AOF日志格式.png" width="60%" height="60%">
+
+<ul>
+<li>*3：表示当前指令分为三个部分，每个部分都是 「$ + 数字」开头，紧跟后面是该部分具体的「指令、键、值」。</li>
+<li>数字：表示这部分的命令、键、值多占用的字节大小。比如 「$3」表示这部分包含 3 个字节，也就是 「set」指令</li>
+</ul>
+<h4 id="2-3-写回策略"><a href="#2-3-写回策略" class="headerlink" title="2.3 写回策略"></a>2.3 写回策略</h4><ul>
+<li><p>风险</p>
+<ul>
+<li>如果Redis刚执行完指令，还没记录日志就宕机了，就有可能丢失这个命令相关的数据。</li>
+<li>AOF避免了当前命令的阻塞，但是可能会导致下一个命令被阻塞。AOF 日志是主线程执行，将日志写入磁盘过程中，如果磁盘压力大就会导致写磁盘很慢，导致后续的「写」指令阻塞。</li>
+</ul>
+<p>为了提高文件的写入效率，当用户调用 write 函数，将一些数据写入到文件的时候，操作系统通常会将写入数据暂时保存在一个内存缓冲区里面，等到缓冲区的空间被填满、或者超过了指定的时限之后，才真正地将缓冲区中的数据写入到磁盘里面。这种做法虽然提高了效率，但也为写入数据带来了安全问题，因为如果计算机发生停机，那么保存在内存缓冲区里面的写入数据将会丢失</p>
+<blockquote>
+<p>强制同步函数</p>
+</blockquote>
+</li>
+<li><p>fsync</p>
+</li>
+<li><p>fdatasync</p>
+<blockquote>
+<p>appendfsync写回策略</p>
+</blockquote>
+</li>
+<li><p>always：同步写回，写指令执行完毕立马将 aof_buf缓冲区中的内容刷写到 AOF 文件。</p>
+</li>
+<li><p>everysec：每秒写回，写指令执行完，日志只会写到 AOF 文件缓冲区，每隔一秒就把缓冲区内容同步到磁盘。</p>
+</li>
+<li><p>no： 操作系统控制，写执行执行完毕，把日志写到 AOF 文件内存缓冲区，由操作系统决定何时刷写到磁盘</p>
+</li>
+</ul>
+<h4 id="2-4-缺点"><a href="#2-4-缺点" class="headerlink" title="2.4 缺点"></a>2.4 缺点</h4><p>由于 AOF 记录的是一个个指令内容，故障恢复的时候需要执行每一个指令，如果日志文件太大，恢复过程会非常缓慢。</p>
+<p>此外文件系统对文件大小也有限制，不能保存过大文件，文件太大，追加效率也会降低。</p>
+<h4 id="2-5-日志过大：AOF重写机制"><a href="#2-5-日志过大：AOF重写机制" class="headerlink" title="2.5 日志过大：AOF重写机制"></a>2.5 日志过大：AOF重写机制</h4><p>开辟一个子进程对内存进行遍历转换成一系列 Redis 的操作指令，序列化到一个新的 AOF 日志文件中。序列化完毕后再将操作期间发生的增量 AOF 日志追加到这个新的 AOF 日志文件中，追加完毕后就立即替代旧的 AOF 日志文件了，瘦身工作就完成了</p>
+<p>为何重写机制能缩写日志文件？多变一<br><img src="/images/Redis/redis_09_aof重写机制.png" width="80%" height="80%"></p>
+<h4 id="2-6-重写过程"><a href="#2-6-重写过程" class="headerlink" title="2.6 重写过程"></a>2.6 重写过程</h4><img src="/images/Redis/redis_09_aof重写过程.png" width="80%" height="80%">
+
+<ul>
+<li>每次 AOF 重写时，Redis 会先执行一个内存拷贝，用于遍历数据生成重写记录</li>
+<li>Redis 会将重写过程中的接收到的「写」指令操作同时记录到旧的 AOF 缓冲区和 AOF 重写缓冲区，这样重写日志也保存最新的操作。</li>
+</ul>
+<p>一共出现 两个日志，一次内存数据拷贝，分别是旧的 AOF 日志和新的 AOF 重写日志和 Redis 数据拷贝</p>
+<h4 id="2-7-重写为何不使用AOF本身日志"><a href="#2-7-重写为何不使用AOF本身日志" class="headerlink" title="2.7 重写为何不使用AOF本身日志"></a>2.7 重写为何不使用AOF本身日志</h4><ul>
+<li>父子进程写同一个文件必然会产生竞争问题，控制竞争就意味着会影响父进程的性能。</li>
+<li>如果 AOF 重写过程中失败了，那么原本的 AOF 文件相当于被污染了，无法做恢复使用</li>
+</ul>
+<h4 id="2-8-Redis-4-0-混合日志模型"><a href="#2-8-Redis-4-0-混合日志模型" class="headerlink" title="2.8 Redis 4.0 混合日志模型"></a>2.8 Redis 4.0 混合日志模型</h4><p>将 rdb 文件的内容和增量的 AOF 日志文件存在一起。这里的 AOF 日志不再是全量的日志，而是自持久化开始到持久化结束的这段时间发生的增量 AOF 日志，通常这部分 AOF 日志很小。</p>
+<p>于是在 Redis 重启的时候，可以先加载 rdb 的内容，然后再重放增量 AOF 日志就可以完全替代之前的 AOF 全量文件重放，重启效率因此大幅得到提升。</p>
+<p>因此快照就不用频繁的执行，同时由于 AOF 只需要记录两次快照之间发生的「写」指令，不需要记录所有的操作，避免出现文件过大的情况。</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3 总结"></a>3 总结</h3><p>Redis 设计了 bgsave 和写时复制，尽可能避免执行快照期间对读写指令的影响，频繁快照会给磁盘带来压力以及 fork 阻塞主线程。</p>
+<p>Redis 设计了两大杀手锏实现了宕机快速恢复，数据不丢失。</p>
+<p>避免日志过大，提供了 AOF 重写机制，根据数据库的数据最新状态，生成数据的写操作作为新日志，并且通过后台完成不阻塞主线程。</p>
+<p>综合 AOF 和 RDB 在 Redis 4.0 提供了新的持久化策略，混合日志模型。在 Redis 重启的时候，可以先加载 rdb 的内容，然后再重放增量 AOF 日志就可以完全替代之前的 AOF 全量文件重放，重启效率因此大幅得到提升。</p>
+
+        </div>
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/20/Redis-10-%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5/"
+                        >
+                            <span class="left arrow-icon flex-center" >
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-10-主从架构数据同步</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/19/Redis-08-%E5%8D%95%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Redis-08-单线程与多线程</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center" >
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                    
+                </main>
+
+            </div>
+
+            <div class="page-main-content-bottom">
+                <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span> -
+            
+            2021 <i class="fas fa-heart icon-animate"></i> <a href="/">win</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a class="theme-version" target="_blank"></a>
+        </div>
+    </div>
+</footer>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="sidebar-tools">
+        <div class="tools-container">
+    <ul class="tools-list">
+        
+
+        
+
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+    </ul>
+</div>
+
+    </div>
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-top flex-center">
+            <i class="fas fa-arrow-up"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="tools-ul-1">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+    </ul>
+</div>
+
+    </div>
+
+    <!-- page aside -->
+    <aside class="page-aside">
+        
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-RDB%E5%86%85%E5%AD%98%E5%BF%AB%E7%85%A7-%E8%AE%A9%E5%AE%95%E6%9C%BA%E5%BF%AB%E9%80%9F%E6%81%A2%E5%A4%8D"><span class="nav-text">1 RDB内存快照 让宕机快速恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E5%BF%AB%E7%85%A7%E8%8C%83%E5%9B%B4"><span class="nav-text">1.1 快照范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E9%A2%91%E7%8E%87"><span class="nav-text">1.2 频率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">1.3 优缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-AOF%E5%86%99%E5%90%8E%E6%97%A5%E5%BF%97-%E9%81%BF%E5%85%8D%E5%AE%95%E6%9C%BA%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1-Append-Only-File"><span class="nav-text">2 AOF写后日志 避免宕机数据丢失 Append Only File</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E5%86%99%E5%90%8E%E6%97%A5%E5%BF%97"><span class="nav-text">2.1 写后日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-AOF%E6%97%A5%E5%BF%97%E6%A0%BC%E5%BC%8F"><span class="nav-text">2.2 AOF日志格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E5%86%99%E5%9B%9E%E7%AD%96%E7%95%A5"><span class="nav-text">2.3 写回策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-%E7%BC%BA%E7%82%B9"><span class="nav-text">2.4 缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-%E6%97%A5%E5%BF%97%E8%BF%87%E5%A4%A7%EF%BC%9AAOF%E9%87%8D%E5%86%99%E6%9C%BA%E5%88%B6"><span class="nav-text">2.5 日志过大：AOF重写机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-%E9%87%8D%E5%86%99%E8%BF%87%E7%A8%8B"><span class="nav-text">2.6 重写过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-7-%E9%87%8D%E5%86%99%E4%B8%BA%E4%BD%95%E4%B8%8D%E4%BD%BF%E7%94%A8AOF%E6%9C%AC%E8%BA%AB%E6%97%A5%E5%BF%97"><span class="nav-text">2.7 重写为何不使用AOF本身日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-8-Redis-4-0-%E6%B7%B7%E5%90%88%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9E%8B"><span class="nav-text">2.8 Redis 4.0 混合日志模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%80%BB%E7%BB%93"><span class="nav-text">3 总结</span></a></li></ol>
+    </div>
+</div>
+        
+    </aside>
+
+    <!-- image viewer -->
+    <div class="image-viewer-container">
+    <div class="img-box">
+        <img src="">
+    </div>
+</div>
+
+
+</div>
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/dark-light-toggle.js"></script>
+
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/left-side-toggle.js"></script>
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/code-copy.js"></script>
+    
+
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.0.4/source/js/toc.js"></script>
+    
+
+
+</body>
+</html>
